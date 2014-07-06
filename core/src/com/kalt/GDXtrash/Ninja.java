@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Ninja {
 	final double JUMP_ANGLE = Math.toRadians(30.0);
+	final float CHARACTER_HEIGHT = 1.6f;
 	float jumpSpeed;
 	
 	private Rectangle hitBox;
@@ -13,17 +14,17 @@ public class Ninja {
 	private boolean jumpTrigger,jumpDirection;
 	Texture texture;
 		
-	public Ninja (int wallWidth, int corridor) {
-		this.wallWidth = wallWidth;
-		this.corridor = corridor;
-			hitBox= new Rectangle(wallWidth, 50, Gdx.graphics.getHeight()*1.6f /20, Gdx.graphics.getHeight()*1.6f /20);
+	public Ninja (Walls walls, int x, int y) {
+		this.wallWidth = walls.width;
+		this.corridor = walls.corridor;
+			hitBox= new Rectangle(wallWidth, 50, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20);
 		jumpDirection=true; // true= right, false= left
 		jumpTrigger=false;
 		jumpSpeed = 200;
 		texture = new Texture (Gdx.files.internal("ninja/idle.PNG"),true); //mipmaps!
 		}
 		
-	public void update (float delta, Rectangle wallRight, Rectangle wallLeft){
+	public void update (float delta){
 		if (Gdx.input.justTouched() ){
 			jumpTrigger=true;
 		}
@@ -34,19 +35,21 @@ public class Ninja {
 			if (jumpDirection) hitBox.x += jumpSpeed * delta;
 				else hitBox.x -= jumpSpeed * delta * Math.cos(JUMP_ANGLE);
 			
-			if (hitBox.overlaps(wallRight) || hitBox.overlaps(wallLeft)){
+			if (hitBox.overlaps(Walls.getWallRight()) || hitBox.overlaps(Walls.getWallLeft())){
 				if (jumpDirection) hitBox.x= wallWidth + corridor-hitBox.width;
 					else hitBox.x= wallWidth;
 				jumpTrigger=false;
 				jumpDirection=!jumpDirection;}
 		}
 	}
-	public void resize (int wallWidthOLD, int corridorOLD, int wallWidth, int corridor){
-		hitBox.x += wallWidth-wallWidthOLD;
-		hitBox.y = hitBox.y*corridor / corridorOLD;
-		hitBox.height= Gdx.graphics.getHeight()*1.6f /20;
+	public void resize (Walls walls){
+			wallWidth= walls.width;
+			corridor= walls.corridor;
+		hitBox.x += walls.width-walls.widthOLD;
+		hitBox.y = hitBox.y*walls.corridor / walls.corridorOLD;
+		hitBox.height= Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20;
 		hitBox.width= hitBox.height;
-		jumpSpeed *= corridor/corridorOLD;
+		jumpSpeed *= walls.corridor/walls.corridorOLD;
 	}
 	public float getX(){
 		return hitBox.x;
