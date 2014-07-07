@@ -26,8 +26,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		walls = new Walls();
-		ninja= new Ninja(walls,20,0);
+		walls = new Walls(); // important! initialize walls first, then ninja!
+		ninja= new Ninja(Walls.width,Gdx.graphics.getHeight()/6);
 	//
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -40,23 +40,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		delta=Gdx.graphics.getDeltaTime();
 			Gdx.gl.glClearColor(0, 0, 0, 1.0f);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.position.y=ninja.getY() + Gdx.graphics.getHeight()/4;
+		camera.position.y=ninja.getY() + Gdx.graphics.getHeight()/3;
 		camera.update();
-		ninja.update(delta);
+		ninja.update(delta,camera.position.y);
 		
 		batch.setProjectionMatrix(camera.combined);
-		walls.draw(batch,camera.position.y);
 		batch.begin();
+			walls.draw(batch,camera.position.y);
 			batch.draw(ninja.texture, ninja.getX(), ninja.getY(), ninja.getWidth(), ninja.getHeight() );
 			font.draw(batch, "Y: " + ninja.getY(), 0, camera.position.y - Gdx.graphics.getHeight()/2 + 15);
 			font.draw(batch, "X: " + ninja.getX(), 0, camera.position.y - Gdx.graphics.getHeight()/2 + 30);
 		batch.end();
 	}
-	public void resize (int x, int y)
+	/*public void resize (int x, int y)
 	{
 			walls.resize();
-			ninja.resize(walls);
+			ninja.resize();
 		//
 		camera.setToOrtho(false, x, y);
-	}
+	}*/
 }

@@ -14,17 +14,17 @@ public class Ninja {
 	private boolean jumpTrigger,jumpDirection;
 	Texture texture;
 		
-	public Ninja (Walls walls, int x, int y) {
-		this.wallWidth = walls.width;
-		this.corridor = walls.corridor;
-			hitBox= new Rectangle(wallWidth, 50, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20);
+	public Ninja (int x, int y) {
+		this.wallWidth = Walls.width;
+		this.corridor = Walls.corridor;
+			hitBox= new Rectangle(x, y, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20, Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20);
 		jumpDirection=true; // true= right, false= left
 		jumpTrigger=false;
-		jumpSpeed = 200;
+		jumpSpeed = 400;
 		texture = new Texture (Gdx.files.internal("ninja/idle.PNG"),true); //mipmaps!
 		}
 		
-	public void update (float delta){
+	public void update (float delta, float camY){
 		if (Gdx.input.justTouched() ){
 			jumpTrigger=true;
 		}
@@ -41,16 +41,23 @@ public class Ninja {
 				jumpTrigger=false;
 				jumpDirection=!jumpDirection;}
 		}
+		if (Math.floor( Math.abs(camY - Gdx.graphics.getHeight()/2) / Gdx.graphics.getHeight() ) != Walls.currentBlock )
+		{                 // math.abs e pt cazul in care baza camerei ajunge sub y=0...
+			Walls.currentBlock=Walls.nextBlock();
+			if (Walls.currentBlock == Walls.NUM_OF_BLOCKS-1)
+				this.hitBox.y -= (Walls.NUM_OF_BLOCKS -1)*Gdx.graphics.getHeight() ;
+				
+		}
 	}
-	public void resize (Walls walls){
-			wallWidth= walls.width;
-			corridor= walls.corridor;
-		hitBox.x += walls.width-walls.widthOLD;
-		hitBox.y = hitBox.y*walls.corridor / walls.corridorOLD;
+	/*public void resize (){
+			wallWidth= Walls.width;
+			corridor= Walls.corridor;
+		hitBox.x += Walls.width-Walls.widthOLD;
+		hitBox.y = hitBox.y*Walls.corridor / Walls.corridorOLD;
 		hitBox.height= Gdx.graphics.getHeight()*CHARACTER_HEIGHT /20;
 		hitBox.width= hitBox.height;
-		jumpSpeed *= walls.corridor/walls.corridorOLD;
-	}
+		jumpSpeed *= Walls.corridor/Walls.corridorOLD;
+	}*/
 	public float getX(){
 		return hitBox.x;
 	}
