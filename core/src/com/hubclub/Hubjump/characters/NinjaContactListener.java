@@ -1,4 +1,4 @@
-package com.hubclub.Hubjump.characters;
+package com.hubclub.hubjump.characters;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;

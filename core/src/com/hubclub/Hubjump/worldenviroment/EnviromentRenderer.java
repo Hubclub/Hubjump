@@ -1,4 +1,4 @@
-package com.hubclub.Hubjump.worldenviroment;
+package com.hubclub.hubjump.worldenviroment;
 
 import java.util.Iterator;
 
@@ -13,15 +13,21 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class EnviromentRenderer {
-	private Box2DDebugRenderer debugRenderer;
+	private Enviroment env;
 	private World world;
-	private OrthographicCamera camera;
 	Array<Body> bodies;
+	
+	private OrthographicCamera camera;
+	private Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;
 		BitmapFont font;
 	
-	public EnviromentRenderer (World world){
-		this.world= world;
+	private boolean debug;
+		
+	public EnviromentRenderer (Enviroment env,boolean debug){
+		this.env= env;
+		this.world= env.world;
+		this.debug=debug;
 		debugRenderer = new Box2DDebugRenderer();
 		bodies = new Array<Body>();
 			batch= new SpriteBatch();
@@ -33,36 +39,49 @@ public class EnviromentRenderer {
 	}
 	
 	public void updateStage (){
+		
+		// get the body list and fetch an iterator
 		world.getBodies(bodies);
-	Iterator <Body> bi = bodies.iterator();
-
-	while (bi.hasNext()){
-	    Body b = bi.next();
-	    
-	    if (b.getUserData() != null){
-	    	//System.out.println(b.getUserData().getClass().getName());
-	    	
-		    if (b.getUserData().getClass().getName() == "com.hubclub.Hubjump.characters.Ninja"){
-		    	if (b.getPosition().y > camera.position.y ){
-		    		camera.position.y = b.getPosition().y;
-		    		camera.update(); }
-		    	
-		    	//debug
-		    	batch.begin();
-					font.draw(batch, "X: " + b.getPosition().x, 0, camera.position.y + 10 );
-					font.draw(batch, "Y: " + b.getPosition().y, 0, camera.position.y  );
-				batch.end();
+		Iterator <Body> bi = bodies.iterator();
+	
+		while (bi.hasNext()){
+		    Body b = bi.next();
+		    
+		    if (b.getUserData() != null){ // not necessary, but for safetey's sake
+		    						
+		    	// check if the object is of type ninja
+			    if (b.getUserData().getClass().getName() == "com.hubclub.hubjump.characters.Ninja"){ 
+			    	if (b.getPosition().y > camera.position.y ){ // reposition the camera if ninja goes above the camera's center
+			    		camera.position.y = b.getPosition().y;
+			    		camera.update();
+			    	}
+			    	
+			    	//show character coordinates
+			    	if (debug){
+			    	batch.begin();
+						font.draw(batch, "X: " + b.getPosition().x, 0, camera.position.y + 10 );
+						font.draw(batch, "Y: " + b.getPosition().y, 0, camera.position.y  );
+					batch.end();
+			    	}
+			    }
+		  
+			    //checks if wallsegments are under the screen and need deletion.
+			    if (b.getPosition().y < camera.position.y- Enviroment.VP_HEIGHT/2 &&
+			    	b.getUserData().getClass().getName() == "com.hubclub.hubjump.characters.WallSegment"){
+			    	
+			    	System.out.println("object deleted!");
+			    	env.moveQueue();
+			    }
 		    }
-	  
-	    }
-	    
-	    // Entity e = (Entity) b.getUserData();
-
-	 //   if (e != null) {
-	        // Update the entities/sprites position and angle
-	      //  e.setPosition(b.getPosition().x, b.getPosition().y);
-	        // We need to convert our angle from radians to degrees
-	      //  e.setRotation(MathUtils.radiansToDegrees * b.getAngle());
+		    /*
+		    Entity e = (Entity) b.getUserData();
+	
+		    if (e != null) {
+		        Update the entities/sprites position and angle
+		        e.setPosition(b.getPosition().x, b.getPosition().y);
+		        We need to convert our angle from radians to degrees
+		        e.setRotation(MathUtils.radiansToDegrees * b.getAngle());
+		        */
 	}
 }
 	

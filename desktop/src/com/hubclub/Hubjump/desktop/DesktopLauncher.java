@@ -1,8 +1,8 @@
-package com.hubclub.Hubjump.desktop;
+package com.hubclub.hubjump.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.hubclub.Hubjump.Hubjump;
+import com.hubclub.hubjump.GameClass;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.title= "hubjump";
 		config.width= 480;
 		config.height=800;
-		config.useGL30=true;
-		new LwjglApplication(new Hubjump(), config);
+		config.useGL30=false;
+		new LwjglApplication(new GameClass(), config);
 	}
 }

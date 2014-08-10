@@ -1,16 +1,16 @@
-package com.hubclub.Hubjump.android;
+package com.hubclub.hubjump.android;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.hubclub.Hubjump.Hubjump;
+import com.hubclub.hubjump.GameClass;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Hubjump(), config);
+		initialize(new GameClass(), config);
 	}
 }
