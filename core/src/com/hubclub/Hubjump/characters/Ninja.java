@@ -23,7 +23,7 @@ public class Ninja {
 	Body ninjaBody; // a reference to the object for easier manipulation...
 	State state;
 	boolean faceDirection ; //false = left, true = right
-	int wallContact = 1;
+	int wallContact = 0;
 	
 	
 	public Ninja (){
@@ -83,10 +83,15 @@ public class Ninja {
 			else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
 	}
 	
-	void startContact (){ wallContact++;
-						 this.state = State.HANGING;}
-	void endContact (){ wallContact--;
-						 this.state = State.JUMPING;}
+	void startContact () {
+        wallContact++;
+	    this.state = State.HANGING;
+    }
+
+	void endContact (){
+        wallContact--;
+		this.state = State.JUMPING;
+    }
 
 	
 	
