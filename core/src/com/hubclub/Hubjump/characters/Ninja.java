@@ -23,7 +23,7 @@ public class Ninja {
 	Body ninjaBody; // a reference to the object for easier manipulation...
 	State state;
 	boolean faceDirection ; //false = left, true = right
-	boolean wallContact = true;
+	int wallContact = 1;
 	
 	
 	public Ninja (){
@@ -58,33 +58,34 @@ public class Ninja {
 	
 		ninjaShape.dispose();
 	}
+	public void jump (){
+		if (!faceDirection) ninjaBody.applyLinearImpulse(
+				ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
+				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
+				0, 0, true);
+		
+		else ninjaBody.applyLinearImpulse(
+				-ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
+				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
+				0, 0, true);
+	}
 	
 	
 	public void update (){
-		if (Gdx.input.justTouched() && wallContact){
+		if (Gdx.input.justTouched() && wallContact > 0){
 			ninjaBody.setLinearVelocity(0, 0);
-
-			if (!faceDirection) ninjaBody.applyLinearImpulse(
-					ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
-					ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
-					0, 0, true);
-			
-			else ninjaBody.applyLinearImpulse(
-					-ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
-					ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
-					0, 0, true);
-			
+			jump();
 			faceDirection = !faceDirection;
 		}
-		
-		if (wallContact)
+			//why  == and not != ??
+		if (wallContact > 0 && state == State.IDLE )
 			if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
 			else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
 	}
 	
-	void startContact (){ wallContact = true;
+	void startContact (){ wallContact++;
 						 this.state = State.HANGING;}
-	void endContact (){ wallContact = false;
+	void endContact (){ wallContact--;
 						 this.state = State.JUMPING;}
 
 	

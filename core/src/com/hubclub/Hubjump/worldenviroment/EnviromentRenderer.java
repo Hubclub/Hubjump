@@ -13,20 +13,18 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class EnviromentRenderer {
-	private Enviroment env;
 	private World world;
 	Array<Body> bodies;
 	
-	private OrthographicCamera camera;
-	private Box2DDebugRenderer debugRenderer;
+	public static OrthographicCamera camera;
+	public Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;
 		BitmapFont font;
 	
 	private boolean debug;
 		
-	public EnviromentRenderer (Enviroment env,boolean debug){
-		this.env= env;
-		this.world= env.world;
+	public EnviromentRenderer (World world,boolean debug){
+		this.world= world;
 		this.debug=debug;
 		debugRenderer = new Box2DDebugRenderer();
 		bodies = new Array<Body>();
@@ -65,13 +63,6 @@ public class EnviromentRenderer {
 			    	}
 			    }
 		  
-			    //checks if wallsegments are under the screen and need deletion.
-			    if (b.getPosition().y < camera.position.y- Enviroment.VP_HEIGHT/2 &&
-			    	b.getUserData().getClass().getName() == "com.hubclub.hubjump.characters.WallSegment"){
-			    	
-			    	System.out.println("object deleted!");
-			    	env.moveQueue();
-			    }
 		    }
 		    /*
 		    Entity e = (Entity) b.getUserData();

@@ -57,11 +57,12 @@ public class WallSegment {
 		wallShape.dispose();
 	}
 	
-	public float getBottomY (){
-		return wallsegment.getPosition().y-Enviroment.VP_HEIGHT;
+	public float getBottomBaseY (){
+		return wallsegment.getPosition().y;
 		
 	}
 	
+
 	public Body getWallsegment() {
 		return wallsegment;
 	}

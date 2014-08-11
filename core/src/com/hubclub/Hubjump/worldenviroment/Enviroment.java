@@ -18,7 +18,7 @@ public class Enviroment {
 	
 	protected World world;
 	private Ninja ninja;
-	protected  Queue<WallSegment> segments;
+	private  Queue<WallSegment> segments;
 	
 	public Enviroment (){
 		this.world =(new World(new Vector2(0, GRAVITATIONAL_ACCELERATION), true));
@@ -53,7 +53,12 @@ public class Enviroment {
 	}
 	
 	public void update (){
-		
+
+	    //checks if wallsegments are under the screen and need deletion.
+	    if (segments.peek().getBottomBaseY() < EnviromentRenderer.camera.position.y- Enviroment.VP_HEIGHT/2) {
+	    	System.out.println("object deleted!");
+	    	moveQueue();
+	    }
 		
 		
 		ninja.update();

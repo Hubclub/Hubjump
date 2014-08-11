@@ -1,6 +1,5 @@
 package com.hubclub.hubjump.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.hubclub.hubjump.GameClass;
 import com.hubclub.hubjump.worldenviroment.Enviroment;
@@ -13,7 +12,7 @@ public class GameScreen implements Screen{
 	  						// find necessary to change the screen of the game
 	// Variables here
 	Enviroment env = new Enviroment();
-	EnviromentRenderer renderer= new EnviromentRenderer(env,true);
+	EnviromentRenderer renderer= new EnviromentRenderer(env.getWorld(),true);
 	
 	boolean presstostart = false;
 
@@ -26,13 +25,7 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		renderer.render();
-		
-		if (presstostart)
-			env.update();
-		else
-			if (Gdx.input.justTouched()){
-				presstostart= true;
-			}
+		env.update();
 	}
 
 	public void resize(int width, int height) {
