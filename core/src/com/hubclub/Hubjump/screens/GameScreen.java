@@ -1,7 +1,9 @@
 package com.hubclub.hubjump.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.hubclub.hubjump.GameClass;
+import com.hubclub.hubjump.helpers.InputHandler;
 import com.hubclub.hubjump.worldenviroment.Enviroment;
 import com.hubclub.hubjump.worldenviroment.EnviromentRenderer;
 
@@ -11,14 +13,14 @@ public class GameScreen implements Screen{
 	private GameClass game; // game variable of type GameClass; use this variable when you 
 	  						// find necessary to change the screen of the game
 	// Variables here
+	public static InputHandler inp = new InputHandler();
 	Enviroment env = new Enviroment();
 	EnviromentRenderer renderer= new EnviromentRenderer(env.getWorld(),true);
-	
-	boolean presstostart = false;
 
 	
 	public GameScreen(final GameClass game) {
 		// Initialize the game variable
+		Gdx.input.setInputProcessor(inp);
 		this.game = game; 
 	}
 	

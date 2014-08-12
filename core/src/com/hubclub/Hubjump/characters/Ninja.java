@@ -1,6 +1,5 @@
 package com.hubclub.hubjump.characters;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -8,17 +7,18 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.hubclub.hubjump.screens.GameScreen;
 
 public class Ninja {
 	static public enum State{
 		IDLE, HANGING, JUMPING, DEAD
 	}
 	public static final float JUMP_SPEED = 12f;
+	public static final float DASH_SPEED = 8f;
 	public static final double JUMP_ANGLE = Math.toRadians(40);
 	public static final float NINJA_WIDTH = 1.6f;
-	public static final float NINJA_HEIGHT = 1.6f;
-	public static final String NAME = "Ninja";
-	
+	public static final float NINJA_HEIGHT = 1.6f;	
+
 	Texture ninjaTexture;
 	Body ninjaBody; // a reference to the object for easier manipulation...
 	State state;
@@ -29,7 +29,6 @@ public class Ninja {
 	public Ninja (){
 		this.state = State.IDLE;
 		faceDirection = false;
-		//ninjatexture =  ???
 	}
 	
 	
@@ -59,6 +58,7 @@ public class Ninja {
 		ninjaShape.dispose();
 	}
 	public void jump (){
+		ninjaBody.setLinearVelocity(0, 0);
 		if (!faceDirection) ninjaBody.applyLinearImpulse(
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
@@ -68,16 +68,20 @@ public class Ninja {
 				-ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
 				0, 0, true);
+		faceDirection = !faceDirection;
 	}
 	
+	public void dash(){
+		ninjaBody.setLinearVelocity(0, 0);
+		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);
+	}
 	
 	public void update (){
-		if (Gdx.input.justTouched() && wallContact > 0){
-			ninjaBody.setLinearVelocity(0, 0);
+		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact > 0 )
 			jump();
-			faceDirection = !faceDirection;
-		}
-			//why  == and not != ??
+		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact > 0 )
+			dash();
+		//why  == and not != ??
 		if (wallContact > 0 && state == State.IDLE )
 			if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
 			else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);

@@ -13,8 +13,11 @@ import com.hubclub.hubjump.worldenviroment.Enviroment;
 public class WallSegment {
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float STAIR_WIDTH = 3f;
-	public static final float JUMP_HEIGHT = 2.9027f;
-	public static final String NAME = "WallSegment";
+	public static final float JUMP_HEIGHT= (Ninja.JUMP_SPEED * Ninja.JUMP_SPEED * (float)(Math.sin(Ninja.JUMP_ANGLE)*Math.sin(Ninja.JUMP_ANGLE)))
+												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
+	public static final float DASH_HEIGHT= (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
+												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
+
 	private static BodyDef wallDef;
 	//
 	static public Sprite wallSprite;

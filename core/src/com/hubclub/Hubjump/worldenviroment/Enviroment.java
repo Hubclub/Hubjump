@@ -9,9 +9,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.characters.NinjaContactListener;
 import com.hubclub.hubjump.characters.WallSegment;
+import com.hubclub.hubjump.screens.GameScreen;
 
 public class Enviroment {
-	private final static float GRAVITATIONAL_ACCELERATION = -10f;
+	public final static float GRAVITATIONAL_ACCELERATION = -10f;
 	public final static float VP_WIDTH = 12;
 	public final static float VP_HEIGHT = 20;
 	public final static byte NUMBER_OF_BLOCKS = 3;
@@ -62,11 +63,16 @@ public class Enviroment {
 		
 		
 		ninja.update();
-		getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
+		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+		
+		GameScreen.inp.resetInput();
 	}
 
 	public World getWorld() {
 		return world;
+	}
+	public Ninja getNinja(){
+		return ninja;
 	}
 
 }

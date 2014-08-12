@@ -12,8 +12,8 @@ import com.hubclub.hubjump.screens.GameScreen;
 public class GameClass extends Game {
 	
 	public void create() {
-		setScreen(new GameScreen(this));
-		
+		GameScreen theGame = new GameScreen(this);
+		setScreen(theGame);
 	}
 	
 	/*   The game does not start if i leave these:
