@@ -1,6 +1,5 @@
 package com.hubclub.hubjump.characters;
 
-import java.util.Stack;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -20,7 +19,6 @@ public class WallSegment {
 	//
 	static public Sprite wallSprite;
 	private static Vector2 lastJumpPoint;
-	private Stack<Vector2> jumpPoints;
 	private Body wallsegment;
 	
 	public void initializeBodyDef (){
@@ -29,20 +27,16 @@ public class WallSegment {
 		wallDef.position.set(0, Enviroment.VP_HEIGHT);
 	}
 	
-	public WallSegment (){
-		jumpPoints= new Stack<Vector2>();
-	}
+	public WallSegment (){}
 	
-	private Vector2 getNextJumpPoint(Vector2 prevPoint){
+	private void generateNextJumpPoint(){
 		// change the x to the center of the other wall
-		if (prevPoint.x == WALL_WIDTH/2)
-			prevPoint.x = Enviroment.VP_WIDTH - WALL_WIDTH/2;
-		else prevPoint.x= WALL_WIDTH/2;
+		if (lastJumpPoint.x == WALL_WIDTH/2)
+			lastJumpPoint.x = Enviroment.VP_WIDTH - WALL_WIDTH/2;
+		else lastJumpPoint.x= WALL_WIDTH/2;
 		
-		prevPoint.y+= JUMP_HEIGHT;
-		
-		//System.out.println(prevPoint);
-		return prevPoint;
+		//increment y
+		lastJumpPoint.y += JUMP_HEIGHT;
 	}
 	
 	public void generateNextSegment (World world){
@@ -50,29 +44,30 @@ public class WallSegment {
 		wallsegment = world.createBody(wallDef);
 		wallsegment.setUserData(this);
 		
-		//generate path (uses the previous generated point)
-		while (lastJumpPoint.y < wallDef.position.y){
-			jumpPoints.add(lastJumpPoint);
-			lastJumpPoint = getNextJumpPoint(lastJumpPoint);
-		}
-		
-		
-		
 		
 		PolygonShape wallShape = new PolygonShape();
-		wallShape.setAsBox(WALL_WIDTH/2 , Enviroment.VP_HEIGHT/2, new Vector2(WALL_WIDTH/2, -Enviroment.VP_HEIGHT/2) , 0);
-		getWallsegment().createFixture(wallShape, 0);
-		wallShape.setAsBox(WALL_WIDTH/2 , Enviroment.VP_HEIGHT/2, new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, -Enviroment.VP_HEIGHT/2) , 0);
-		getWallsegment().createFixture(wallShape, 0);
+		//checks if the jumpPoints fit in the wallsegment and adds the fixture.
+		while (lastJumpPoint.y < wallDef.position.y){
+			System.out.println("Created nextJumpPoint" + lastJumpPoint);
+			wallShape.setAsBox(WALL_WIDTH/2 , Ninja.NINJA_HEIGHT/2, new Vector2(lastJumpPoint.x, lastJumpPoint.y - wallDef.position.y) , 0);
+			wallsegment.createFixture(wallShape, 0);
+
+			generateNextJumpPoint();
+		}
+		
 
 		wallShape.dispose();
 	}
 	
 	public void generateFirstSegment (World world){
-		jumpPoints.add(new Vector2(WALL_WIDTH/2, Enviroment.VP_HEIGHT - Ninja.getNinjaHeight()/2) );
-		lastJumpPoint = getNextJumpPoint(jumpPoints.peek());
+		// the first jump point to mark the start of the path...
+		lastJumpPoint = new Vector2(WALL_WIDTH/2, Enviroment.VP_HEIGHT - Ninja.getNinjaHeight()/2);
+		System.out.println("Created nextJumpPoint" + lastJumpPoint);
+		// the next jumpPoint is obviously out of the first wallsegment, so we generate it for the next segment.
+		generateNextJumpPoint();
 
 		
+		//magic. do not touch
 		initializeBodyDef();
 		wallsegment = world.createBody(wallDef);
 		wallsegment.setUserData(this);
@@ -87,7 +82,7 @@ public class WallSegment {
 		getWallsegment().createFixture(wallShape, 0);
 		
 		wallShape.dispose();
-
+		//end of magic
 	}
 	
 	public float getBottomBaseY (){
