@@ -13,6 +13,8 @@ public class WallSegment {
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float WINDOW_WIDTH = 0.25f;
 	public static final float STAIR_WIDTH = 3f;
+	public static final float SLIDE_RANGE = 3f; // required for generating the path. represents how much the ninja 
+												// should slide down until he can jump again
 	public static final float JUMP_HEIGHT= (Ninja.JUMP_SPEED * Ninja.JUMP_SPEED * (float)(Math.sin(Ninja.JUMP_ANGLE)*Math.sin(Ninja.JUMP_ANGLE)))
 												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
 	public static final float DASH_HEIGHT= (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
@@ -20,6 +22,8 @@ public class WallSegment {
 
 	private class lastThreePoints{
 		private Vector2[] pts;  // ORDER : first lastpoint, second lastpoint, lastJumpPoint;
+		private float[] ptsHeight;
+		private float windowHeight;
 		boolean inSegment;
 		boolean lastPointSide; // false = left, true = right;
 		
@@ -27,24 +31,33 @@ public class WallSegment {
 			lastPointSide = false; //hardcoded? should have been = true
 			
 			pts= new Vector2[3];
+			ptsHeight= new float[3];
 			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, - Ninja.getNinjaHeight()/2);
 			pts [1] = new Vector2(WALL_WIDTH/2, - Ninja.getNinjaHeight()/2);
+			ptsHeight [0] = Ninja.NINJA_HEIGHT;
+			ptsHeight [1] = Ninja.NINJA_HEIGHT;
+			
 			pts [2] = generateNextJumpPoint(pts[1].cpy());
 			show();
 		}
-		public Vector2 peekFirst(){
-			return pts[0];
+		public float peekHeight(){
+			return ptsHeight[2];
 		}
-		public Vector2 peekLast(){
+		public Vector2 peek(){
 			return pts[2];
 		}
 		public void show(){
 			System.out.println(pts[0] + "  " + pts[1] + " " + pts[2] + "      " + inSegment);			
+			System.out.println(ptsHeight[0] + "  " + ptsHeight[1] + " " + ptsHeight[2]);			
 		}
 		public boolean moveLeft(){
+			ptsHeight[0]=ptsHeight[1];
+			ptsHeight[1]=ptsHeight[2];
+			
 			pts[0].set(pts[1]);
 			pts[1].set(pts[2]);
 			pts[2] = new Vector2(generateNextJumpPoint(pts[2]));
+			
 			lastPointSide = !lastPointSide;
 			show();
 			
@@ -59,6 +72,8 @@ public class WallSegment {
 			
 			//increment y
 			prevPt.y += JUMP_HEIGHT;
+			ptsHeight[2] = Ninja.NINJA_HEIGHT + (float)Math.random()*SLIDE_RANGE;
+			prevPt.y -= ptsHeight[2] /2;
 			
 			// checks if lastpoint is in the wallsegment or outside of it
 			if (prevPt.y < 0 )
@@ -73,7 +88,9 @@ public class WallSegment {
 		}
 		
 		private float getWindowHeight(){
-			return ( pts[2].y - pts[0].y ) /2 - Ninja.NINJA_HEIGHT/2;
+			windowHeight = (pts[2].y - ptsHeight[2]/2) - (pts[0].y + ptsHeight[0] /2);
+			System.out.println(windowHeight + "aaAAAAAAAAAAAAAAAAAAAAAAA");
+			return windowHeight;
 		}
 		
 		//this transforms the last point into the window's coordinates and returns them
@@ -84,7 +101,7 @@ public class WallSegment {
 				pts[0].x = Enviroment.VP_WIDTH - WALL_WIDTH + WINDOW_WIDTH/2;
 			
 			
-			pts[0].y = (pts[0].y + pts[2].y)/2;
+			pts[0].y = pts[2].y - ptsHeight[2]/2 - windowHeight/2;
 			
 			return pts[0];
 		}
@@ -113,10 +130,10 @@ public class WallSegment {
 		PolygonShape wallShape = new PolygonShape();
 		//checks if the jumpPoints fit in the wallsegment and adds the fixture.
 		do{
-			System.out.println("Created nextJumpPoint" + lastJumpPoints.peekLast());
-			wallShape.setAsBox(WALL_WIDTH/2 , Ninja.NINJA_HEIGHT/2, new Vector2( lastJumpPoints.peekLast() ) , 0);
+			System.out.println("Created nextJumpPoint" + lastJumpPoints.peek());
+			wallShape.setAsBox(WALL_WIDTH/2 , lastJumpPoints.peekHeight()/2 , new Vector2( lastJumpPoints.peek() ) , 0);
 			wallsegment.createFixture(wallShape, 0);
-			wallShape.setAsBox(WINDOW_WIDTH/2, lastJumpPoints.getWindowHeight() , new Vector2(lastJumpPoints.getWindowPos() ) , 0);
+			wallShape.setAsBox(WINDOW_WIDTH/2, lastJumpPoints.getWindowHeight()/2 , new Vector2(lastJumpPoints.getWindowPos() ) , 0);
 			wallsegment.createFixture(wallShape, 0);
 			
 		}while ( lastJumpPoints.moveLeft() );

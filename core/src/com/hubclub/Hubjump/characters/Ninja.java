@@ -13,7 +13,7 @@ public class Ninja {
 	static public enum State{
 		IDLE, HANGING, JUMPING, DEAD
 	}
-	public static final float JUMP_SPEED = 12f;
+	public static final float JUMP_SPEED = 18f;
 	public static final float DASH_SPEED = 8f;
 	public static final double JUMP_ANGLE = Math.toRadians(40);
 	public static final float NINJA_WIDTH = 1.6f;
