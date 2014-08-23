@@ -75,7 +75,6 @@ public class Ninja {
 		ninjaBody.setLinearVelocity(0, 0);
 		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);
 	}
-	
 	public void update (){
 		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact > 0 )
 			jump();
@@ -90,6 +89,7 @@ public class Ninja {
 	void startContact () {
         wallContact++;
 	    this.state = State.HANGING;
+	    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + ninjaBody.getPosition().y);
     }
 
 	void endContact (){

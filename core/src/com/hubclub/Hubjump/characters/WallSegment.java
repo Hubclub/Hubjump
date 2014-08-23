@@ -13,11 +13,10 @@ public class WallSegment {
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float WINDOW_WIDTH = 0.25f;
 	public static final float STAIR_WIDTH = 3f;
-	public static final float SLIDE_RANGE = 3f; // required for generating the path. represents how much the ninja 
+	public static final float SLIDE_RANGE = 0f; // required for generating the path. represents how much the ninja 
 												// should slide down until he can jump again
-	public static final float JUMP_HEIGHT= (Ninja.JUMP_SPEED * Ninja.JUMP_SPEED * (float)(Math.sin(Ninja.JUMP_ANGLE)*Math.sin(Ninja.JUMP_ANGLE)))
-												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
-	public static final float DASH_HEIGHT= (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
+	public static final float JUMP_HEIGHT = calculateJumpHeight();
+	public static final float DASH_HEIGHT = (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
 												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
 
 	private class lastThreePoints{
@@ -70,10 +69,13 @@ public class WallSegment {
 				prevPt.x = Enviroment.VP_WIDTH - WALL_WIDTH/2;
 			else prevPt.x= WALL_WIDTH/2;
 			
+			//adapt y
+			prevPt.y += -ptsHeight[1]/2 + Ninja.NINJA_HEIGHT/2;
+			
 			//increment y
 			prevPt.y += JUMP_HEIGHT;
 			ptsHeight[2] = Ninja.NINJA_HEIGHT + (float)Math.random()*SLIDE_RANGE;
-			prevPt.y -= ptsHeight[2] /2;
+			prevPt.y += - ptsHeight[2] /2 + Ninja.NINJA_HEIGHT/2;
 			
 			// checks if lastpoint is in the wallsegment or outside of it
 			if (prevPt.y < 0 )
@@ -87,9 +89,9 @@ public class WallSegment {
 			return prevPt;
 		}
 		
+		//has to be called before getWindowPos() !
 		private float getWindowHeight(){
 			windowHeight = (pts[2].y - ptsHeight[2]/2) - (pts[0].y + ptsHeight[0] /2);
-			System.out.println(windowHeight + "aaAAAAAAAAAAAAAAAAAAAAAAA");
 			return windowHeight;
 		}
 		
@@ -105,12 +107,16 @@ public class WallSegment {
 			
 			return pts[0];
 		}
-	}
+	}/////////////////////////////////////////////////////////////////////////
 	
 	private static BodyDef wallDef;
 	private static lastThreePoints lastJumpPoints;
 	private Body wallsegment;
 	
+	public static float calculateJumpHeight(){
+		float t= (Enviroment.VP_WIDTH - 2*WALL_WIDTH - Ninja.NINJA_WIDTH) / Ninja.JUMP_SPEED * (float)Math.cos(Ninja.JUMP_ANGLE) ;
+		return Ninja.JUMP_SPEED * (float)Math.sin(Ninja.JUMP_ANGLE) * t + Enviroment.GRAVITATIONAL_ACCELERATION *t*t/2;
+	}
 	
 	public void initializeBodyDef (){
 		wallDef = new BodyDef();
