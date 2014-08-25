@@ -13,7 +13,7 @@ public class WallSegment {
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float WINDOW_WIDTH = 0.25f;
 	public static final float STAIR_WIDTH = 3f;
-	public static final float SLIDE_RANGE = 0f; // required for generating the path. represents how much the ninja 
+	public static final float SLIDE_RANGE = 2f; // required for generating the path. represents how much the ninja 
 												// should slide down until he can jump again
 	public static final float JUMP_HEIGHT = calculateJumpHeight();
 	public static final float DASH_HEIGHT = (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
@@ -31,10 +31,10 @@ public class WallSegment {
 			
 			pts= new Vector2[3];
 			ptsHeight= new float[3];
-			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, - Ninja.getNinjaHeight()/2);
-			pts [1] = new Vector2(WALL_WIDTH/2, - Ninja.getNinjaHeight()/2);
-			ptsHeight [0] = Ninja.NINJA_HEIGHT;
-			ptsHeight [1] = Ninja.NINJA_HEIGHT;
+			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, 0);
+			pts [1] = new Vector2(WALL_WIDTH/2, 0);
+			ptsHeight [0] = 0;
+			ptsHeight [1] = 0;
 			
 			pts [2] = generateNextJumpPoint(pts[1].cpy());
 			show();
@@ -82,9 +82,9 @@ public class WallSegment {
 				inSegment = true;
 			else{
 				inSegment = false;
-				prevPt.y -= Enviroment.VP_HEIGHT;
 				pts[0].y -= Enviroment.VP_HEIGHT;
 				pts[1].y -= Enviroment.VP_HEIGHT;
+				prevPt.y -= Enviroment.VP_HEIGHT;
 			}
 			return prevPt;
 		}

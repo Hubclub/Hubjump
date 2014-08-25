@@ -1,7 +1,9 @@
 package com.hubclub.hubjump;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.hubclub.hubjump.screens.GameScreen;
+import com.hubclub.hubjump.screens.SplashScreen;
 
 // We extend the Game class because we're going 
 // to work with Screens; only a class who inherits 
@@ -10,20 +12,23 @@ import com.hubclub.hubjump.screens.GameScreen;
 // to launch the application
 
 public class GameClass extends Game {
+	public GameScreen theGame;
+	public SplashScreen splashScreen;
 	
 	public void create() {
-		GameScreen theGame = new GameScreen(this);
-		setScreen(theGame);
+		theGame = new GameScreen(this);
+		splashScreen = new SplashScreen(this);
+		setScreen(splashScreen);
 	}
 	
-	/*   The game does not start if i leave these:
+	
 	
 	public void render() {
 		
-		// TODO ~ you must implement the render method from the superclass
+		this.getScreen().render(Gdx.graphics.getDeltaTime());
 		// THAT'S ALL!
 		
-	} // END OF render METHOD
+	}
 	
 	public void resize(int width, int height) {
 		
@@ -52,5 +57,4 @@ public class GameClass extends Game {
 		// and dispose other variable initialized in the upper create method
 		
 	}
-	*/
 }
