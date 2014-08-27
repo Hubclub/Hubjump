@@ -14,11 +14,13 @@ public class MainMenu implements InputProcessor {
 		String name;
 		boolean pressed;
 		
-		public MenuButton (String name, String path, float x, float y, float ratio ) {
+		public MenuButton (String name, String path, float x, float y, float width, float height ) {
 			tex = new Texture (Gdx.files.internal(path) );
 			pos = new Vector2(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() );
-			this.width = tex.getWidth() * ratio;
-			this.height = tex.getHeight() * ratio;
+			
+			this.width = width/100 * Gdx.graphics.getWidth();
+			this.height = height/100 * Gdx.graphics.getHeight();
+			
 			pressed = false;
 			this.name= name;
 		}
@@ -38,7 +40,7 @@ public class MainMenu implements InputProcessor {
 			System.out.println("MAIN MENU: NO ACTION ASSIGNED FOR BUTTON");
 		}
 	}
-	private static byte NUMBER_OF_BUTTONS = 1;
+	private static byte NUMBER_OF_BUTTONS = 2;
 	private boolean isShown;
 	SpriteBatch batch;
 	MenuButton[] buttons;
@@ -47,10 +49,15 @@ public class MainMenu implements InputProcessor {
 		buttons = new MenuButton[NUMBER_OF_BUTTONS];
 		batch = new SpriteBatch();
 		
-		buttons[0] = new MenuButton("start", "button/start.PNG", 50, 20, 3) {
+		buttons[0] = new MenuButton("start", "button/start.png", 50, 20, 25, 7.5f) {
 			public void action (){
 				hide();
 				GameScreen.setInputHandler();
+			}
+		};
+		buttons[1] = new MenuButton("title", "button/titre.png", 15, 85, 70 , 10) {
+			public void action (){
+				System.out.println("This is the title, why would you tap it?");
 			}
 		};
 		

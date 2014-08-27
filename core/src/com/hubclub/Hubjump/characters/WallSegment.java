@@ -15,7 +15,7 @@ public class WallSegment {
 	public static final float STAIR_WIDTH = 3f;
 	public static final float SLIDE_RANGE = 2f; // required for generating the path. represents how much the ninja 
 												// should slide down until he can jump again
-	public static final float JUMP_HEIGHT = calculateJumpHeight();
+	public static final float JUMP_HEIGHT = (float)calculateJumpHeight();
 	public static final float DASH_HEIGHT = (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
 												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
 
@@ -31,10 +31,10 @@ public class WallSegment {
 			
 			pts= new Vector2[3];
 			ptsHeight= new float[3];
-			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, 0);
-			pts [1] = new Vector2(WALL_WIDTH/2, 0);
-			ptsHeight [0] = 0;
-			ptsHeight [1] = 0;
+			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, -Ninja.NINJA_HEIGHT/2);
+			pts [1] = new Vector2(WALL_WIDTH/2, -Ninja.NINJA_HEIGHT/2);
+			ptsHeight [0] = Ninja.NINJA_HEIGHT;
+			ptsHeight [1] = Ninja.NINJA_HEIGHT;
 			
 			pts [2] = generateNextJumpPoint(pts[1].cpy());
 			show();
@@ -113,9 +113,9 @@ public class WallSegment {
 	private static lastThreePoints lastJumpPoints;
 	private Body wallsegment;
 	
-	public static float calculateJumpHeight(){
-		float t= (Enviroment.VP_WIDTH - 2*WALL_WIDTH - Ninja.NINJA_WIDTH) / Ninja.JUMP_SPEED * (float)Math.cos(Ninja.JUMP_ANGLE) ;
-		return Ninja.JUMP_SPEED * (float)Math.sin(Ninja.JUMP_ANGLE) * t + Enviroment.GRAVITATIONAL_ACCELERATION *t*t/2;
+	public static double calculateJumpHeight(){
+		double t= (Enviroment.VP_WIDTH - 2*WALL_WIDTH - Ninja.NINJA_WIDTH) / (Ninja.JUMP_SPEED * Math.cos(Ninja.JUMP_ANGLE));
+		return Ninja.JUMP_SPEED * Math.sin(Ninja.JUMP_ANGLE) * t + Enviroment.GRAVITATIONAL_ACCELERATION *t*t/2;
 	}
 	
 	public void initializeBodyDef (){

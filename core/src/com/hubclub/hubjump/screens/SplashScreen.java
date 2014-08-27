@@ -10,7 +10,7 @@ import com.hubclub.hubjump.GameClass;
 
 public class SplashScreen implements Screen {
 	GameClass game;
-	Texture background = new Texture(Gdx.files.internal("SplashScreen.PNG"));
+	Texture background = new Texture(Gdx.files.internal("SplashScreen.png"));
 	SpriteBatch batch = new SpriteBatch();
 	boolean trigger = false;
 	

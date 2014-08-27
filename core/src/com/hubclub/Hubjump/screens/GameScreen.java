@@ -22,9 +22,10 @@ public class GameScreen implements Screen{
 	
 	public GameScreen(final GameClass game) {
 		// Initialize the game variable
+		this.game = game; 
+		
 		env= new Enviroment();
 		renderer = new EnviromentRenderer(env.getWorld(),true);
-		this.game = game; 
 		
 		Gdx.input.setInputProcessor(mainMenu);
 	}
@@ -36,6 +37,8 @@ public class GameScreen implements Screen{
 		
 		if (mainMenu.isShown())
 			mainMenu.render();
+		
+		inp.updateInput();
 	}
 	
 	protected static void setInputHandler(){

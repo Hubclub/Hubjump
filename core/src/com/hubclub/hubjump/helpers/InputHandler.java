@@ -13,17 +13,47 @@ public class InputHandler extends InputAdapter {
 	private float yCoord;
 	*/
 	
+	class LastInput{
+		int inp;
+		float delay; //the delay is frame based! TO DO: change to time based
+		
+		public LastInput(){
+			inp = 0;
+			delay = 0;
+		}
+		
+		void add (int t){
+			inp=t;
+			if (t==1)
+				delay = 4;
+			else delay = 0;
+		}
+		
+		int peek(){
+			if (delay == 0)
+				return inp;
+			
+			return 0;
+		}
+		
+		void update(){
+			if (delay>0)
+				delay--;
+			else
+				inp = 0;
+		}
+	}
 	
 	/* 0 = nada
 	 * 1 = tap
 	 * 2 = swipe
 	 */
-	private int type = 0;
+	private LastInput inp = new LastInput();
 	
 	// Occurs when you touch the screen 
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 			//make the ninja jump
-		type=1;
+		inp.add(1);
 		
 		return super.touchDown(screenX, screenY, pointer, button);
 	}
@@ -37,7 +67,7 @@ public class InputHandler extends InputAdapter {
 	
 	// Occurs when you drag over the screen
 	public boolean touchDragged (int screenX, int screenY, int pointer) {
-		type=2;
+		inp.add(2);
 		
 		return super.touchDragged(screenX, screenY, pointer);
 	}
@@ -45,10 +75,11 @@ public class InputHandler extends InputAdapter {
 	// Use this method to get the InputType when needed
 	public int getInput(float xCoord, float yCoord) {
 		// return the value
-		return type;
+		
+		return inp.peek();
 	}
-	public void resetInput(){
-		type=0;
+	public void updateInput(){
+		inp.update();
 	}
 	
 }

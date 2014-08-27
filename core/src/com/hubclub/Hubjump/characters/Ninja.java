@@ -23,12 +23,15 @@ public class Ninja {
 	Body ninjaBody; // a reference to the object for easier manipulation...
 	State state;
 	boolean faceDirection ; //false = left, true = right
+	boolean canDash;
 	int wallContact = 0;
+	
 	
 	
 	public Ninja (){
 		this.state = State.IDLE;
 		faceDirection = false;
+		canDash = false;
 	}
 	
 	
@@ -58,6 +61,7 @@ public class Ninja {
 		ninjaShape.dispose();
 	}
 	public void jump (){
+		System.out.println("NINJA : JUST JUMPED");
 		ninjaBody.setLinearVelocity(0, 0);
 		if (!faceDirection) ninjaBody.applyLinearImpulse(
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
@@ -69,16 +73,26 @@ public class Ninja {
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
 				0, 0, true);
 		faceDirection = !faceDirection;
+		
+		canDash = true; // allow the ninja to dash next time he hits a wall.
 	}
 	
 	public void dash(){
+		System.out.println("NINJA : JUST DASHED");
 		ninjaBody.setLinearVelocity(0, 0);
 		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);
+		
+		// this shouldn't be necessary but it's here to make sure the ninja stays in contact 
+		// with the wall when he dashes
+		if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
+		else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
+		
+		canDash = false; // you dash once, you can't do it again( well, not on the same wall)
 	}
 	public void update (){
 		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact > 0 )
 			jump();
-		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact > 0 )
+		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact > 0 && canDash )
 			dash();
 		//why  == and not != ??
 		if (wallContact > 0 && state == State.IDLE )

@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.characters.NinjaContactListener;
 import com.hubclub.hubjump.characters.WallSegment;
-import com.hubclub.hubjump.screens.GameScreen;
 
 public class Enviroment {
 	public final static float GRAVITATIONAL_ACCELERATION = -10f;
@@ -64,8 +63,6 @@ public class Enviroment {
 		
 		ninja.update();
 		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
-		
-		GameScreen.inp.resetInput();
 	}
 
 	public World getWorld() {
