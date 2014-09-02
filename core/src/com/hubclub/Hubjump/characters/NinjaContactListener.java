@@ -12,13 +12,22 @@ public class NinjaContactListener implements ContactListener {
 	}
 	@Override
 	public void beginContact(Contact contact) {
-		if (contact.getFixtureA().getBody().getUserData() != null)
+	//	if (contact.getFixtureA().getBody().getUserData() != null)
 			if (contact.getFixtureA().getBody().getUserData().equals(ninja))
 				ninja.startContact();
-		if (contact.getFixtureB().getBody().getUserData() != null)
+	//	if (contact.getFixtureB().getBody().getUserData() != null)
 			if (contact.getFixtureB().getBody().getUserData().equals(ninja))
 				ninja.startContact();
+			
+	if (contact.getFixtureA().getDensity() == 4){
+		contact.getFixtureA().getBody().destroyFixture( contact.getFixtureA() );
+	}
+	if (contact.getFixtureB().getDensity() == 4){
+		contact.getFixtureB().getBody().destroyFixture( contact.getFixtureB() );
+	}
 		
+	
+	
 	}
 
 	@Override

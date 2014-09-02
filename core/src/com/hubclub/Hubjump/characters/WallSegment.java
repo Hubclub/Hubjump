@@ -18,6 +18,9 @@ public class WallSegment {
 	public static final float JUMP_HEIGHT = (float)calculateJumpHeight();
 	public static final float DASH_HEIGHT = (Ninja.DASH_SPEED * Ninja.DASH_SPEED) 
 												/ (2 * -Enviroment.GRAVITATIONAL_ACCELERATION);
+	
+	public static final float windowXleft = WALL_WIDTH/2; //optimization
+	public static final float windowXright = Enviroment.VP_WIDTH - WALL_WIDTH/2;
 
 	private class lastThreePoints{
 		private Vector2[] pts;  // ORDER : first lastpoint, second lastpoint, lastJumpPoint;
@@ -31,8 +34,8 @@ public class WallSegment {
 			
 			pts= new Vector2[3];
 			ptsHeight= new float[3];
-			pts [0] = new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, -Ninja.NINJA_HEIGHT/2);
-			pts [1] = new Vector2(WALL_WIDTH/2, -Ninja.NINJA_HEIGHT/2);
+			pts [0] = new Vector2(windowXright, -Ninja.NINJA_HEIGHT/2);
+			pts [1] = new Vector2(windowXleft, -Ninja.NINJA_HEIGHT/2);
 			ptsHeight [0] = Ninja.NINJA_HEIGHT;
 			ptsHeight [1] = Ninja.NINJA_HEIGHT;
 			
@@ -65,9 +68,9 @@ public class WallSegment {
 		protected Vector2 generateNextJumpPoint(Vector2 prevPt){
 			//System.out.println( prevPt);
 			// change the x to the center of the other wall
-			if (prevPt.x == WALL_WIDTH/2)
-				prevPt.x = Enviroment.VP_WIDTH - WALL_WIDTH/2;
-			else prevPt.x= WALL_WIDTH/2;
+			if (prevPt.x == windowXleft)
+				prevPt.x = windowXright;
+			else prevPt.x = windowXleft;
 			
 			//adapt y
 			prevPt.y += -ptsHeight[1]/2 + Ninja.NINJA_HEIGHT/2;
@@ -140,7 +143,7 @@ public class WallSegment {
 			wallShape.setAsBox(WALL_WIDTH/2 , lastJumpPoints.peekHeight()/2 , new Vector2( lastJumpPoints.peek() ) , 0);
 			wallsegment.createFixture(wallShape, 0);
 			wallShape.setAsBox(WINDOW_WIDTH/2, lastJumpPoints.getWindowHeight()/2 , new Vector2(lastJumpPoints.getWindowPos() ) , 0);
-			wallsegment.createFixture(wallShape, 0);
+			wallsegment.createFixture(wallShape, 4);
 			
 		}while ( lastJumpPoints.moveLeft() );
 		

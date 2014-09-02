@@ -2,6 +2,7 @@ package com.hubclub.hubjump.worldenviroment;
 
 import java.util.Iterator;
 
+import com.hubclub.hubjump.characters.Ninja;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,6 +17,7 @@ public class EnviromentRenderer {
 	private World world;
 	Array<Body> bodies;
 	
+	private static float pixRatio = Gdx.graphics.getHeight() / Enviroment.VP_HEIGHT;
 	public static OrthographicCamera camera;
 	public Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;
@@ -56,11 +58,12 @@ public class EnviromentRenderer {
 			    	
 			    	//show character coordinates
 			    	if (debug){
-			    	batch.begin();
 						font.draw(batch, "X: " + b.getPosition().x, 0, camera.position.y + 10 );
 						font.draw(batch, "Y: " + b.getPosition().y, 0, camera.position.y  );
-					batch.end();
 			    	}
+			    	
+			    	Ninja nin = (Ninja) b.getUserData();
+			    	nin.draw(batch , pixRatio, (b.getPosition().y - camera.position.y + Enviroment.VP_HEIGHT/2) *pixRatio );
 			    }
 		  
 		    }
@@ -79,8 +82,11 @@ public class EnviromentRenderer {
 	public void render (){
 		Gdx.gl.glClearColor(0f, 0f, 0.2f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		updateStage();
+		batch.begin();
+			updateStage();
 		
+		batch.end();
+			
 		debugRenderer.render(world, camera.combined);
 	}
 }

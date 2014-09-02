@@ -1,6 +1,7 @@
 package com.hubclub.hubjump.characters;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -24,7 +25,7 @@ public class Ninja {
 	State state;
 	boolean faceDirection ; //false = left, true = right
 	boolean canDash;
-	int wallContact = 0;
+	boolean wallContact = false;
 	
 	
 	
@@ -62,6 +63,9 @@ public class Ninja {
 	}
 	public void jump (){
 		System.out.println("NINJA : JUST JUMPED");
+		this.state = State.JUMPING;
+		wallContact = false;
+		
 		ninjaBody.setLinearVelocity(0, 0);
 		if (!faceDirection) ninjaBody.applyLinearImpulse(
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
@@ -82,33 +86,32 @@ public class Ninja {
 		ninjaBody.setLinearVelocity(0, 0);
 		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);
 		
-		// this shouldn't be necessary but it's here to make sure the ninja stays in contact 
-		// with the wall when he dashes
-		if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
-		else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
-		
 		canDash = false; // you dash once, you can't do it again( well, not on the same wall)
 	}
 	public void update (){
-		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact > 0 )
+		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact )
 			jump();
-		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact > 0 && canDash )
+		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
 			dash();
 		//why  == and not != ??
-		if (wallContact > 0 && state == State.IDLE )
+		if (wallContact && state == State.IDLE )
 			if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
 			else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
 	}
 	
+	public void draw (SpriteBatch batch, float ratio, float y){
+		batch.draw(NinjaAnimation.getTexture(state),
+				ninjaBody.getPosition().x * ratio, y,
+				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio);
+	}
+	
 	void startContact () {
-        wallContact++;
+        wallContact = true;
 	    this.state = State.HANGING;
-	    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + ninjaBody.getPosition().y);
     }
 
 	void endContact (){
-        wallContact--;
-		this.state = State.JUMPING;
+        // this gets called whenever he switches from a window to a wall... meh
     }
 
 	
