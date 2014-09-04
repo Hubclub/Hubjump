@@ -17,7 +17,7 @@ public class EnviromentRenderer {
 	private World world;
 	Array<Body> bodies;
 	
-	private static float pixRatio = Gdx.graphics.getHeight() / Enviroment.VP_HEIGHT;
+	public static float pixRatio = Gdx.graphics.getHeight() / Enviroment.VP_HEIGHT;
 	public static OrthographicCamera camera;
 	public Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;

@@ -21,6 +21,9 @@ public class WallSegment {
 	
 	public static final float windowXleft = WALL_WIDTH/2; //optimization
 	public static final float windowXright = Enviroment.VP_WIDTH - WALL_WIDTH/2;
+	
+	public static final float wallFriction = 1f;
+	public static final float windowFriction = 0.2f;
 
 	private class lastThreePoints{
 		private Vector2[] pts;  // ORDER : first lastpoint, second lastpoint, lastJumpPoint;
@@ -141,10 +144,11 @@ public class WallSegment {
 		do{
 			System.out.println("Created nextJumpPoint" + lastJumpPoints.peek());
 			wallShape.setAsBox(WALL_WIDTH/2 , lastJumpPoints.peekHeight()/2 , new Vector2( lastJumpPoints.peek() ) , 0);
-			wallsegment.createFixture(wallShape, 0);
-			wallShape.setAsBox(WINDOW_WIDTH/2, lastJumpPoints.getWindowHeight()/2 , new Vector2(lastJumpPoints.getWindowPos() ) , 0);
-			wallsegment.createFixture(wallShape, 4);
+			wallsegment.createFixture(wallShape, 0).setFriction(wallFriction);
 			
+			wallShape.setAsBox(WINDOW_WIDTH/2, lastJumpPoints.getWindowHeight()/2 , new Vector2(lastJumpPoints.getWindowPos() ) , 0);
+			wallsegment.createFixture(wallShape, 4).setFriction(windowFriction);
+												//density 4 is used just to figure out in other methods that this fixture is a window
 		}while ( lastJumpPoints.moveLeft() );
 		
 

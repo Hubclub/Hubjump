@@ -2,6 +2,7 @@ package com.hubclub.hubjump.characters;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -18,7 +19,8 @@ public class Ninja {
 	public static final float DASH_SPEED = 8f;
 	public static final double JUMP_ANGLE = Math.toRadians(40);
 	public static final float NINJA_WIDTH = 1.6f;
-	public static final float NINJA_HEIGHT = 1.6f;	
+	public static final float NINJA_HEIGHT = 1.6f;
+	public static final float FEET_POS = 0.4f;
 
 	Texture ninjaTexture;
 	Body ninjaBody; // a reference to the object for easier manipulation...
@@ -113,10 +115,18 @@ public class Ninja {
 	void endContact (){
         // this gets called whenever he switches from a window to a wall... meh
     }
+	
+	public void applyImpulse (Vector2 impulse){
+		ninjaBody.applyLinearImpulse(impulse.x, impulse.y, 0, 0, true);
+		ninjaBody.setFixedRotation(false);
+	}
 
 	
 	
 
+	public float getFeetPos() {
+		return ninjaBody.getPosition().y - NINJA_HEIGHT/2 + FEET_POS;
+	}
 	public static float getNinjaWidth() {
 		return NINJA_WIDTH;
 	}

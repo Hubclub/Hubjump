@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.characters.NinjaContactListener;
@@ -20,15 +21,20 @@ public class Enviroment {
 	private Ninja ninja;
 	private  Queue<WallSegment> segments;
 	
+	boolean fixtureDeletion;
+	Vector2 impulse;
+	Fixture fixture;
+	
 	public Enviroment (){
 		this.world =(new World(new Vector2(0, GRAVITATIONAL_ACCELERATION), true));
 			ninja = new Ninja();
 			ninja.setBody(world, 3f, 6.8f);
-		world.setContactListener(new NinjaContactListener(ninja));
+		world.setContactListener(new NinjaContactListener(ninja,this));
 		
 		segments = new LinkedList<WallSegment>();
 		generateFirstSegments();
 	
+		fixtureDeletion = false;
 	}
 	
 	private void generateFirstSegments(){
@@ -63,6 +69,24 @@ public class Enviroment {
 		
 		ninja.update();
 		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+		
+		if (fixtureDeletion && fixture != null){ // acts like a trigger. deletes a window once the deletion is "queued"
+			fixture.getBody().destroyFixture(fixture);
+			fixture = null;
+			fixtureDeletion = false;
+			
+			ninja.applyImpulse(impulse);
+		}
+	}
+	
+	public void queueFixtureDeletion(Fixture fix, Vector2 impulse){
+		fixture = fix;
+		this.impulse = impulse;
+		fixtureDeletion = true;
+	}
+	
+	public void stopContactListener(){
+		world.setContactListener(null);
 	}
 
 	public World getWorld() {
