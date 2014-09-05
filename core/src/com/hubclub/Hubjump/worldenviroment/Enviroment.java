@@ -75,7 +75,7 @@ public class Enviroment {
 			fixture = null;
 			fixtureDeletion = false;
 			
-			ninja.applyImpulse(impulse);
+			ninja.crashIntoWindow(impulse);
 		}
 	}
 	

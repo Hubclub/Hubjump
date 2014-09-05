@@ -30,6 +30,12 @@ public class NinjaContactListener implements ContactListener {
 			ninja.startContact();
 			
 		
+		if (contact.getFixtureA().getDensity() == 4){
+			verify( contact.getFixtureA() , contact.getFixtureB() );
+		}
+		if (contact.getFixtureB().getDensity() == 4){
+			verify( contact.getFixtureB() , contact.getFixtureA() );
+		}
 	}
 
 	@Override
@@ -45,39 +51,32 @@ public class NinjaContactListener implements ContactListener {
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		if (contact.getFixtureA().getDensity() == 4){
-			verify( contact.getFixtureA() , contact.getFixtureB() );
-		}
-		if (contact.getFixtureB().getDensity() == 4){
-			verify( contact.getFixtureB() , contact.getFixtureA() );
+		
+	}
+	
+	//this code pulls the position and height of the window, and then checks if it should break
+	void verify(Fixture window, Fixture ninja){
+		Transform transform = window.getBody().getTransform();
+		PolygonShape shape = (PolygonShape) window.getShape();
+		Vector2 vec = new Vector2();
+		Vector2 temp = new Vector2();
+		float height;
+		
+		shape.getVertex(1, vec);
+		shape.getVertex(2, temp);
+		height = temp.y - vec.y;
+			
+		shape.getVertex(3, vec);
+		transform.mul(vec);
+			
+		// now we have vec (the position of the window) and the height of the window
+			
+		if ( inBetween( vec.y-height , this.ninja.getFeetPos() , vec.y) ){
+			env.queueFixtureDeletion( window, ninja.getBody().getLinearVelocity() );
+			env.stopContactListener();
+			Gdx.input.setInputProcessor(null);
 		}
 	}
-		//this code pulls the position and height of the window, and then checks if it should break
-		void verify(Fixture window, Fixture ninja){
-			Transform transform = window.getBody().getTransform();
-			PolygonShape shape = (PolygonShape) window.getShape();
-			Vector2 vec = new Vector2();
-			Vector2 temp = new Vector2();
-			float height;
-			
-			shape.getVertex(1, vec);
-			shape.getVertex(2, temp);
-			height = temp.y - vec.y;
-			
-			
-			for (int i = 0 ; i < shape.getVertexCount() ; i++ ){
-				shape.getVertex(i, vec);
-				transform.mul(vec);
-			}
-			System.out.println("TRANSFORM THING: " + vec.x + " " +vec.y + " | " + height);
-			// now we have vec (the position of the window) and the height of the window
-			
-			if ( inBetween( vec.y-height , this.ninja.getFeetPos() , vec.y) ){
-				env.queueFixtureDeletion( window, ninja.getBody().getLinearVelocity() );
-				env.stopContactListener();
-				Gdx.input.setInputProcessor(null);
-			}
-		}
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
@@ -86,7 +85,7 @@ public class NinjaContactListener implements ContactListener {
 	}
 	
 	boolean inBetween(float a, float b, float c){
-		System.out.println(a + " " + b + " " + c);
+		//System.out.println(a + " " + b + " " + c);
 		if (a<b && b<c)
 			return true;
 		return false;

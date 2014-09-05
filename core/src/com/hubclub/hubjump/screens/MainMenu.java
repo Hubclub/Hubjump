@@ -35,20 +35,31 @@ public class MainMenu implements InputProcessor {
 			pressed = false;
 			return false;
 		}
+		
+		// this function is meant to be overridden
 		public void action() {
-			// this is meant to be overridden
-			System.out.println("MAIN MENU: NO ACTION ASSIGNED FOR BUTTON");
+			System.out.println("MAIN MENU: NO ACTION ASSIGNED FOR BUTTON " + name);
 		}
 	}
-	private static byte NUMBER_OF_BUTTONS = 2;
+	private static byte NUMBER_OF_MAIN_MENU_BUTTONS = 2;
+	private static byte NUMBER_OF_RETRY_MENU_BUTTONS = 3;
 	private boolean isShown;
 	SpriteBatch batch;
 	MenuButton[] buttons;
+	GameScreen gameScreen;
 	
 	public MainMenu(){
-		buttons = new MenuButton[NUMBER_OF_BUTTONS];
 		batch = new SpriteBatch();
 		
+		initializeMainMenuButtons();
+		isShown=true;
+	}
+	// needed to restart the game. called only once
+	public void giveGameScreenAdress(GameScreen g){gameScreen = g;}
+	
+	public void initializeMainMenuButtons(){
+		buttons = new MenuButton[NUMBER_OF_MAIN_MENU_BUTTONS];
+		// initialize the menu buttons:
 		buttons[0] = new MenuButton("start", "button/start.png", 50, 20, 25, 7.5f) {
 			public void action (){
 				hide();
@@ -60,8 +71,32 @@ public class MainMenu implements InputProcessor {
 				System.out.println("This is the title, why would you tap it?");
 			}
 		};
+	}
+	
+	public void initializeRetryButtons(){
+		buttons = new MenuButton[NUMBER_OF_RETRY_MENU_BUTTONS];
+		// initialize the retry overlay buttons
+		buttons[0] = new MenuButton("gameover", "button/GG.png", 15, 65, 70, 25);
+		buttons[1] = new MenuButton("mainmenu", "button/mainmenu.png", 20, 40, 60, 10){
+			public void action(){
+				gameScreen.restartGame(true);
+			}
+		};
+		buttons[2] = new MenuButton("retry", "button/retry.png", 20, 25, 60, 10){
+			public void action(){
+				gameScreen.restartGame(false);
+			}
+		};
 		
-		isShown=true;
+		isShown = true;
+	}
+	
+	public void switchTo(int i){ // 0 for mainMenu buttons, 1 for the retry menu
+		if (i == 0){
+			initializeMainMenuButtons();
+		}else{
+			initializeRetryButtons();
+		}
 	}
 	
 	public void render (){

@@ -116,9 +116,12 @@ public class Ninja {
         // this gets called whenever he switches from a window to a wall... meh
     }
 	
-	public void applyImpulse (Vector2 impulse){
+	public void crashIntoWindow (Vector2 impulse){
 		ninjaBody.applyLinearImpulse(impulse.x, impulse.y, 0, 0, true);
 		ninjaBody.setFixedRotation(false);
+		this.state = State.DEAD;
+		
+		GameScreen.gameOver();
 	}
 
 	

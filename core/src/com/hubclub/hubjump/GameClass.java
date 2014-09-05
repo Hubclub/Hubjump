@@ -15,13 +15,12 @@ public class GameClass extends Game {
 	public GameScreen theGame;
 	public SplashScreen splashScreen;
 	
+	//first time we create the game and a splashscreen(which we show first)
 	public void create() {
 		theGame = new GameScreen(this);
 		splashScreen = new SplashScreen(this);
 		setScreen(splashScreen);
 	}
-	
-	
 	
 	public void render() {
 		
