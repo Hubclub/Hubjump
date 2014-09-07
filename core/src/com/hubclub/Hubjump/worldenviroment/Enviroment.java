@@ -28,7 +28,7 @@ public class Enviroment {
 	public Enviroment (){
 		this.world =(new World(new Vector2(0, GRAVITATIONAL_ACCELERATION), true));
 			ninja = new Ninja();
-			ninja.setBody(world, 3f, 6.8f);
+			ninja.setBody(world, 2.2f, 6f);
 		world.setContactListener(new NinjaContactListener(ninja,this));
 		
 		segments = new LinkedList<WallSegment>();

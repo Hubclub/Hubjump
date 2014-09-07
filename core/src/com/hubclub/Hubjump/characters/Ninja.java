@@ -27,14 +27,17 @@ public class Ninja {
 	State state;
 	boolean faceDirection ; //false = left, true = right
 	boolean canDash;
-	boolean wallContact = false;
+	boolean wallContact;
+	boolean firstJump;
 	
 	
 	
 	public Ninja (){
 		this.state = State.IDLE;
-		faceDirection = false;
+		faceDirection = true;
 		canDash = false;
+		wallContact = false;
+		firstJump = true;
 	}
 	
 	
@@ -50,7 +53,7 @@ public class Ninja {
 		ninjaBody.setUserData(this);
 		
 		PolygonShape ninjaShape = new PolygonShape();
-		ninjaShape.setAsBox(NINJA_WIDTH / 2, NINJA_HEIGHT / 2);
+		ninjaShape.setAsBox(NINJA_WIDTH / 2, NINJA_HEIGHT / 2,new Vector2(NINJA_WIDTH / 2, NINJA_HEIGHT / 2) , 0);
 		
 		FixtureDef ninjaFixtureDef = new FixtureDef();
 			
@@ -63,6 +66,14 @@ public class Ninja {
 	
 		ninjaShape.dispose();
 	}
+	public void firstjump(){
+		ninjaBody.applyLinearImpulse(
+				ninjaBody.getMass() * JUMP_SPEED * (float)Math.cos(JUMP_ANGLE),
+				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
+				0, 0, true);
+		this.state = State.JUMPING;
+	}
+	
 	public void jump (){
 		System.out.println("NINJA : JUST JUMPED");
 		this.state = State.JUMPING;
@@ -91,20 +102,31 @@ public class Ninja {
 		canDash = false; // you dash once, you can't do it again( well, not on the same wall)
 	}
 	public void update (){
-		if (GameScreen.inp.getInput(0, 0) == 1 && wallContact )
-			jump();
-		if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
-			dash();
-		//why  == and not != ??
-		if (wallContact && state == State.IDLE )
-			if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
-			else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
-	}
+		if (firstJump && GameScreen.inp.getInput(0, 0) == 1){
+			firstjump();
+			firstJump = false;
+		}else{
+			
+			if (GameScreen.inp.getInput(0, 0) == 1 && wallContact )
+				jump();
+			if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
+				dash();
+			//why  == and not != ??
+			if (wallContact && state == State.IDLE )
+				if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
+				else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
+	}}
 	
 	public void draw (SpriteBatch batch, float ratio, float y){
-		batch.draw(NinjaAnimation.getTexture(state),
+	/*	batch.draw(NinjaAnimation.getTexture(state),
 				ninjaBody.getPosition().x * ratio, y,
-				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio);
+				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio);*/
+		batch.draw(NinjaAnimation.getTexture(state,faceDirection),
+				ninjaBody.getPosition().x * ratio, y,
+				0f, 0f,
+				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio,
+				1f, 1f, 
+				(float)Math.toDegrees( ninjaBody.getAngle() ) );
 	}
 	
 	void startContact () {
@@ -128,7 +150,7 @@ public class Ninja {
 	
 
 	public float getFeetPos() {
-		return ninjaBody.getPosition().y - NINJA_HEIGHT/2 + FEET_POS;
+		return ninjaBody.getPosition().y + FEET_POS;
 	}
 	public static float getNinjaWidth() {
 		return NINJA_WIDTH;

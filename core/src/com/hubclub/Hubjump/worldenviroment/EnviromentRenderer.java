@@ -22,7 +22,7 @@ public class EnviromentRenderer {
 	public Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;
 		BitmapFont font;
-	
+	private Background background;
 	private boolean debug;
 		
 	public EnviromentRenderer (World world,boolean debug){
@@ -32,6 +32,7 @@ public class EnviromentRenderer {
 		bodies = new Array<Body>();
 			batch= new SpriteBatch();
 			font = new BitmapFont();
+		background = new Background();
 		
 		camera= new OrthographicCamera();
 		camera.setToOrtho(false,Enviroment.VP_WIDTH,Enviroment.VP_HEIGHT);
@@ -83,8 +84,8 @@ public class EnviromentRenderer {
 		Gdx.gl.glClearColor(0f, 0f, 0.2f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+			background.draw(batch,pixRatio);
 			updateStage();
-		
 		batch.end();
 			
 		debugRenderer.render(world, camera.combined);
