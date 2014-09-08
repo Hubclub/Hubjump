@@ -17,18 +17,21 @@ public class GameScreen implements Screen{
 	// Variables here
 	private static MainMenu mainMenu = new MainMenu(); // used for main menu
 	public static InputHandler inp = new InputHandler(); // used for the ninja controls
+	private static boolean GG; // used to see if it's game over
 	
 	EnviromentRenderer renderer;
 	Enviroment env;
-
+	
 	
 	public GameScreen(final GameClass game) {
 		// Initialize the game variable
+		GG = false;
+		
 		this.game = game; 
 		mainMenu.giveGameScreenAdress(this);
 		
 		env= new Enviroment();
-		renderer = new EnviromentRenderer(env.getWorld(),true);
+		renderer = new EnviromentRenderer(env,true);
 
 		Gdx.input.setInputProcessor(mainMenu);
 	}
@@ -36,7 +39,7 @@ public class GameScreen implements Screen{
 	public void restartGame(boolean showMenu){
 		// possible memory leak here
 		env= new Enviroment();
-		renderer = new EnviromentRenderer(env.getWorld(),true);
+		renderer = new EnviromentRenderer(env,true);
 		
 		if (showMenu){
 			mainMenu.switchTo(0); 
@@ -44,7 +47,8 @@ public class GameScreen implements Screen{
 			mainMenu.hide();
 			setInputHandler();
 		}
-			
+		
+		GG = false;
 	}
 	
 	@Override
@@ -59,6 +63,7 @@ public class GameScreen implements Screen{
 	}
 	
 	public static void gameOver (){ // gets called from the ninja class
+		GG = true;
 		Timer.schedule(new Task() {
 			
 			public void run() {
@@ -72,6 +77,9 @@ public class GameScreen implements Screen{
 	
 	protected static void setInputHandler(){
 		Gdx.input.setInputProcessor(inp);
+	}
+	public static boolean isGameOver(){
+		return GG;
 	}
 
 	public void resize(int width, int height) {

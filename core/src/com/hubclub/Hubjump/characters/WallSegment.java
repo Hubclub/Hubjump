@@ -13,6 +13,7 @@ public class WallSegment {
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float WINDOW_WIDTH = 0.25f;
 	public static final float STAIR_WIDTH = 3f;
+	public static final float STAIR_HEIGHT = 6f;
 	public static final float SLIDE_RANGE = 2f; // required for generating the path. represents how much the ninja 
 												// should slide down until he can jump again
 	public static final float JUMP_HEIGHT = (float)calculateJumpHeight();
@@ -169,7 +170,7 @@ public class WallSegment {
 		wallShape.setAsBox(WALL_WIDTH/2 , Enviroment.VP_HEIGHT/2, new Vector2(Enviroment.VP_WIDTH - WALL_WIDTH/2, -Enviroment.VP_HEIGHT/2) , 0);
 		getWallsegment().createFixture(wallShape, 0);
 		
-		wallShape.setAsBox(STAIR_WIDTH/2 , STAIR_WIDTH, new Vector2(WALL_WIDTH + STAIR_WIDTH/2, -Enviroment.VP_HEIGHT+ STAIR_WIDTH) , 0);
+		wallShape.setAsBox(STAIR_WIDTH/2 , STAIR_HEIGHT/2, new Vector2(WALL_WIDTH + STAIR_WIDTH/2, -Enviroment.VP_HEIGHT+ STAIR_WIDTH) , 0);
 		wallsegment.createFixture(wallShape, 0);
 		
 		wallShape.dispose();

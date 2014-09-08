@@ -18,6 +18,7 @@ public class Ninja {
 	public static final float JUMP_SPEED = 18f;
 	public static final float DASH_SPEED = 8f;
 	public static final double JUMP_ANGLE = Math.toRadians(40);
+	public static final float HOLD_FORCE = 2f;
 	public static final float NINJA_WIDTH = 1.6f;
 	public static final float NINJA_HEIGHT = 1.6f;
 	public static final float FEET_POS = 0.4f;
@@ -72,6 +73,7 @@ public class Ninja {
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
 				0, 0, true);
 		this.state = State.JUMPING;
+		canDash = true;
 	}
 	
 	public void jump (){
@@ -90,7 +92,7 @@ public class Ninja {
 				ninjaBody.getMass() * JUMP_SPEED * (float)Math.sin(JUMP_ANGLE),
 				0, 0, true);
 		faceDirection = !faceDirection;
-		
+	
 		canDash = true; // allow the ninja to dash next time he hits a wall.
 	}
 	
@@ -112,15 +114,12 @@ public class Ninja {
 			if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
 				dash();
 			//why  == and not != ??
-			if (wallContact && state == State.IDLE )
-				if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * 15  , 0, true);
-				else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * 15 , 0, true);
+			if (wallContact && state != State.IDLE )
+				if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * HOLD_FORCE  , 0, true);
+				else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * HOLD_FORCE , 0, true);
 	}}
 	
 	public void draw (SpriteBatch batch, float ratio, float y){
-	/*	batch.draw(NinjaAnimation.getTexture(state),
-				ninjaBody.getPosition().x * ratio, y,
-				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio);*/
 		batch.draw(NinjaAnimation.getTexture(state,faceDirection),
 				ninjaBody.getPosition().x * ratio, y,
 				0f, 0f,
@@ -131,26 +130,36 @@ public class Ninja {
 	
 	void startContact () {
         wallContact = true;
-	    this.state = State.HANGING;
+        if (state != State.IDLE)
+        	this.state = State.HANGING;
     }
 
 	void endContact (){
-        // this gets called whenever he switches from a window to a wall... meh
+        // this gets called whenever contact switches from a window to a wall... meh
     }
 	
 	public void crashIntoWindow (Vector2 impulse){
 		ninjaBody.applyLinearImpulse(impulse.x, impulse.y, 0, 0, true);
 		ninjaBody.setFixedRotation(false);
 		this.state = State.DEAD;
+		wallContact = false;
 		
 		GameScreen.gameOver();
 	}
 
 	
 	
-
+	public void freeze (){
+		ninjaBody.setActive(false);
+	}
 	public float getFeetPos() {
 		return ninjaBody.getPosition().y + FEET_POS;
+	}
+	public float getY(){
+		return ninjaBody.getPosition().y;
+	}
+	public float getX(){
+		return ninjaBody.getPosition().x;
 	}
 	public static float getNinjaWidth() {
 		return NINJA_WIDTH;
