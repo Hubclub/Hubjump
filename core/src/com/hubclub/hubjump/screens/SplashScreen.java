@@ -30,7 +30,7 @@ public class SplashScreen implements Screen {
 		}else{
 			Timer.schedule(new Task() {
 	
-				public void run() {			
+				public void run() {
 					game.setScreen(game.theGame);
 				}
 			}

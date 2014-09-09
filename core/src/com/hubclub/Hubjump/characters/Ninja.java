@@ -108,12 +108,12 @@ public class Ninja {
 			firstjump();
 			firstJump = false;
 		}else{
-			
 			if (GameScreen.inp.getInput(0, 0) == 1 && wallContact )
 				jump();
+			
 			if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
 				dash();
-			//why  == and not != ??
+			
 			if (wallContact && state != State.IDLE )
 				if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * HOLD_FORCE  , 0, true);
 				else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * HOLD_FORCE , 0, true);

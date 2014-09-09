@@ -2,6 +2,7 @@ package com.hubclub.hubjump;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hubclub.hubjump.screens.GameScreen;
 import com.hubclub.hubjump.screens.SplashScreen;
 
@@ -12,14 +13,21 @@ import com.hubclub.hubjump.screens.SplashScreen;
 // to launch the application
 
 public class GameClass extends Game {
+	public static SpriteBatch batch;// a spritebatch to be used across all the screens
+	
 	public GameScreen theGame;
-	public SplashScreen splashScreen;
 	
 	//first time we create the game and a splashscreen(which we show first)
 	public void create() {
+		@SuppressWarnings("unused")
+		SpriteBatch batch = new SpriteBatch();
+		
 		theGame = new GameScreen(this);
-		splashScreen = new SplashScreen(this);
-		setScreen(splashScreen);
+		setScreen(new SplashScreen(this));
+	}
+	
+	public void switchToOptions(){
+		
 	}
 	
 	public void render() {

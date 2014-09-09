@@ -2,9 +2,12 @@ package com.hubclub.hubjump.worldenviroment;
 
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.screens.GameScreen;
+import com.hubclub.hubjump.screens.MainMenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -15,24 +18,28 @@ public class EnviromentRenderer {
 	
 	public static float pixRatio = Gdx.graphics.getHeight() / Enviroment.VP_HEIGHT;
 	public static OrthographicCamera camera;
+	private static int score,initCamHeight = (int) Enviroment.VP_HEIGHT/2;
+	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture.png") );
 	public Box2DDebugRenderer debugRenderer;
 		SpriteBatch batch;
-		BitmapFont font;
+		BitmapFont font,debugFont;
+		private Background background;
 	private Ninja ninja;
-	private Background background;
 	private boolean debug;
 	private String scoreString;
-	private int score,initCamHeight = (int) Enviroment.VP_HEIGHT/2;
 		
 	public EnviromentRenderer (Enviroment env,boolean debug){
 		this.world = env.world;
 		this.ninja = env.getNinja();
 		this.debug = debug;
-		this.score = 0;
+		score = 0;
 		debugRenderer = new Box2DDebugRenderer();
 			batch= new SpriteBatch();
-			font = new BitmapFont();
+			font = new BitmapFont(Gdx.files.internal("font/scorefont.fnt"));
+			font.setScale(0.9f);;
+			debugFont = new BitmapFont();
 		background = new Background();
+		brickTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		
 		camera= new OrthographicCamera();
 		camera.setToOrtho(false,Enviroment.VP_WIDTH,Enviroment.VP_HEIGHT);
@@ -45,16 +52,17 @@ public class EnviromentRenderer {
 	  		camera.update();
 		}
 		//update & show score
-		if (camera.position.y - initCamHeight> score)
+		if (camera.position.y - initCamHeight> score && !GameScreen.isGameOver())
 			score += 1;
 		scoreString = score + " m";
+		if ( !MainMenu.isShown() )
 		font.draw(batch, scoreString, 
 				Gdx.graphics.getWidth()/2 - font.getBounds(scoreString).width/2,
-				3f/4 * Gdx.graphics.getHeight());
+				4f/5 * Gdx.graphics.getHeight());
 		//show character coordinates
 		if (debug){
-			font.draw(batch, "X: " + ninja.getY(), 0, 40 );
-			font.draw(batch, "Y: " + ninja.getY(), 0, 20 );
+			debugFont.draw(batch, "X: " + ninja.getX(), 0, 40 );
+			debugFont.draw(batch, "Y: " + ninja.getY(), 0, 20 );
 		}
 		ninja.draw(batch , pixRatio, (ninja.getY() - camera.position.y + Enviroment.VP_HEIGHT/2) *pixRatio );
 		
@@ -75,5 +83,9 @@ public class EnviromentRenderer {
 		batch.end();
 			
 		debugRenderer.render(world, camera.combined);
+	}
+	
+	public static int getScore(){
+		return score;
 	}
 }
