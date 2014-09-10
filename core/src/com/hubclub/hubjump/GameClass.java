@@ -2,8 +2,9 @@ package com.hubclub.hubjump;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.GL20;
 import com.hubclub.hubjump.screens.GameScreen;
+import com.hubclub.hubjump.screens.OptionsScreen;
 import com.hubclub.hubjump.screens.SplashScreen;
 
 // We extend the Game class because we're going 
@@ -13,28 +14,26 @@ import com.hubclub.hubjump.screens.SplashScreen;
 // to launch the application
 
 public class GameClass extends Game {
-	public static SpriteBatch batch;// a spritebatch to be used across all the screens
 	
 	public GameScreen theGame;
+	public OptionsScreen optionsScreen;
 	
 	//first time we create the game and a splashscreen(which we show first)
 	public void create() {
-		@SuppressWarnings("unused")
-		SpriteBatch batch = new SpriteBatch();
-		
 		theGame = new GameScreen(this);
 		setScreen(new SplashScreen(this));
 	}
 	
-	public void switchToOptions(){
-		
+	public void switchToOptionsMenu(){
+		optionsScreen = new OptionsScreen();
+		setScreen(optionsScreen);
 	}
 	
 	public void render() {
+		Gdx.gl.glClearColor(0f, 0f, 0.2f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //clear the screen
 		
-		this.getScreen().render(Gdx.graphics.getDeltaTime());
-		// THAT'S ALL!
-		
+		this.getScreen().render(Gdx.graphics.getDeltaTime()); //draw whatever is on the current screen
 	}
 	
 	public void resize(int width, int height) {

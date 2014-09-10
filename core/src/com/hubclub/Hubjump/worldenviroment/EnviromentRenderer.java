@@ -4,7 +4,6 @@ import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.screens.GameScreen;
 import com.hubclub.hubjump.screens.MainMenu;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
@@ -14,14 +13,14 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class EnviromentRenderer {
+	@SuppressWarnings("unused")
 	private World world;
 	
 	public static float pixRatio = Gdx.graphics.getHeight() / Enviroment.VP_HEIGHT;
 	public static OrthographicCamera camera;
 	private static int score,initCamHeight = (int) Enviroment.VP_HEIGHT/2;
 	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture.png") );
-	public Box2DDebugRenderer debugRenderer;
-		SpriteBatch batch;
+	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 		BitmapFont font,debugFont;
 		private Background background;
 	private Ninja ninja;
@@ -33,8 +32,6 @@ public class EnviromentRenderer {
 		this.ninja = env.getNinja();
 		this.debug = debug;
 		score = 0;
-		debugRenderer = new Box2DDebugRenderer();
-			batch= new SpriteBatch();
 			font = new BitmapFont(Gdx.files.internal("font/scorefont.fnt"));
 			font.setScale(0.9f);;
 			debugFont = new BitmapFont();
@@ -46,7 +43,7 @@ public class EnviromentRenderer {
 		camera.update();
 	}
 	
-	public void updateStage (){
+	public void updateStage (SpriteBatch batch){
 		if (ninja.getY() > camera.position.y ){ // reposition the camera if ninja goes above the camera's center
 	  		camera.position.y = ninja.getY();
 	  		camera.update();
@@ -64,7 +61,6 @@ public class EnviromentRenderer {
 			debugFont.draw(batch, "X: " + ninja.getX(), 0, 40 );
 			debugFont.draw(batch, "Y: " + ninja.getY(), 0, 20 );
 		}
-		ninja.draw(batch , pixRatio, (ninja.getY() - camera.position.y + Enviroment.VP_HEIGHT/2) *pixRatio );
 		
 		if (ninja.getY() < camera.position.y - Enviroment.VP_HEIGHT/2 - Ninja.NINJA_HEIGHT){
 			ninja.freeze();
@@ -74,15 +70,18 @@ public class EnviromentRenderer {
 		}
 	}
 	
-	public void render (){
-		Gdx.gl.glClearColor(0f, 0f, 0.2f, 0f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-			background.draw(batch,pixRatio);
-			updateStage();
-		batch.end();
+	public void render (SpriteBatch batch){
+		background.draw(batch,pixRatio);
+		updateStage(batch);
 			
-		debugRenderer.render(world, camera.combined);
+		ninja.draw(batch , pixRatio, (ninja.getY() - camera.position.y + Enviroment.VP_HEIGHT/2) *pixRatio );
+		
+	}
+	
+	public void debugRender(World world){
+		if (debug)
+			debugRenderer.render(world, camera.combined);
+		// this somehow interferes with batch drawing so it should always be called last
 	}
 	
 	public static int getScore(){

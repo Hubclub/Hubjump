@@ -3,6 +3,7 @@ package com.hubclub.hubjump.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.hubclub.hubjump.GameClass;
@@ -12,10 +13,12 @@ import com.hubclub.hubjump.worldenviroment.EnviromentRenderer;
 
 public class GameScreen implements Screen{
 	
-	protected GameClass game; // game variable of type GameClass; use this variable when you 
+	protected static GameClass game; // game variable of type GameClass; use this variable when you 
 	  						// find necessary to change the screen of the game
+	public static SpriteBatch batch = new SpriteBatch();// a spritebatch to be used across all the screens
+	
 	// Variables here
-	private static MainMenu mainMenu = new MainMenu(); // used for main menu
+	private static MainMenu mainMenu; // used for main menu
 	public static InputHandler inp = new InputHandler(); // used for the ninja controls
 	private static boolean GG; // used to see if it's game over
 	static private Preferences prefs;
@@ -25,13 +28,13 @@ public class GameScreen implements Screen{
 	Enviroment env;
 	
 	
-	public GameScreen(final GameClass game) {
+	public GameScreen(GameClass game) {
+		GameScreen.game = game;
+		mainMenu = new MainMenu(game);
 		// Initialize the game variable
 		GG = false;
 		prefs = Gdx.app.getPreferences("GamePreferences");
 		
-		this.game = game; 
-		mainMenu.giveGameScreenAdress(this);
 		
 		env= new Enviroment();
 		renderer = new EnviromentRenderer(env,true);
@@ -81,15 +84,23 @@ public class GameScreen implements Screen{
 	public static boolean isGameOver(){
 		return GG;
 	}
+	public static SpriteBatch getSpriteBatch(){
+		return batch;
+		
+	}
 	
 	@Override
 	public void render(float delta) {
-		renderer.render();
-		env.update();
+		batch.begin();
+		renderer.render(batch);
 		
 		if (MainMenu.isShown())
-			mainMenu.render();
+			mainMenu.render(batch);
+		batch.end();
 		
+		renderer.debugRender(env.getWorld());
+		
+		env.update();
 		inp.updateInput();
 	}
 	

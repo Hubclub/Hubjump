@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.hubclub.hubjump.GameClass;
 
 public class MainMenu implements InputProcessor {
 	class MenuButton {
@@ -51,21 +52,18 @@ public class MainMenu implements InputProcessor {
 	private static byte NUMBER_OF_MAIN_MENU_BUTTONS = 5;
 	private static byte NUMBER_OF_RETRY_MENU_BUTTONS = 3;
 	private static boolean isShown,showMessage;
-	SpriteBatch batch;
+	private static GameClass game;
 	BitmapFont font;
 	MenuButton[] buttons;
-	GameScreen gameScreen;
 	
-	public MainMenu(){
-		batch = new SpriteBatch();
+	public MainMenu(GameClass game){
+		MainMenu.game = game;
 		font = new BitmapFont();
 		
 		initializeMainMenuButtons();
 		isShown = true;
 		showMessage = false;
 	}
-	// needed to restart the game. called only once
-	public void giveGameScreenAdress(GameScreen g){gameScreen = g;}
 	
 	public void initializeMainMenuButtons(){
 		buttons = new MenuButton[NUMBER_OF_MAIN_MENU_BUTTONS];
@@ -84,7 +82,8 @@ public class MainMenu implements InputProcessor {
 		};
 		buttons[2] = new MenuButton("options", "button/options.png", 62.5f, 27.5f, 20f, 10f) {
 			public void action (){
-				
+				hide();
+				game.switchToOptionsMenu();
 			}
 		};
 		buttons[3] = new MenuButton("help", "button/help.png", 42.5f, 27.5f, 20f, 10f) {
@@ -106,12 +105,12 @@ public class MainMenu implements InputProcessor {
 		buttons[0] = new MenuButton("gameover", "button/GG.png", 15, 65, 70, 25);
 		buttons[1] = new MenuButton("mainmenu", "button/mainmenu.png", 20, 40, 60, 10){
 			public void action(){
-				gameScreen.restartGame(true);
+				game.theGame.restartGame(true);
 			}
 		};
 		buttons[2] = new MenuButton("retry", "button/retry.png", 20, 25, 60, 10){
 			public void action(){
-				gameScreen.restartGame(false);
+				game.theGame.restartGame(false);
 			}
 		};
 		
@@ -126,16 +125,13 @@ public class MainMenu implements InputProcessor {
 		}
 	}
 	
-	public void render (){
-		batch.begin();
+	public void render (SpriteBatch batch){
 		
 		for (MenuButton i : buttons){
 			i.render(batch);
 		}
 		if (showMessage)
 			buttons[0].render(batch, font, GameScreen.GGmessage, 50, 60);
-		
-		batch.end();
 	}
 
 	public void hide (){

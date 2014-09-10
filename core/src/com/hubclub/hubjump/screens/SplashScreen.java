@@ -11,22 +11,25 @@ import com.hubclub.hubjump.GameClass;
 public class SplashScreen implements Screen {
 	GameClass game;
 	Texture background = new Texture(Gdx.files.internal("SplashScreen.png"));
-	SpriteBatch batch = new SpriteBatch();
+	SpriteBatch batch ;
 	boolean trigger = false;
 	
 	public SplashScreen (GameClass game){
+		this.batch = GameScreen.batch;
 		this.game = game;
 	}
 	
 	@Override
 	public void render(float delta) {
 		batch.begin();
-		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.end();
 		
 		if (trigger){
-			if (Gdx.input.justTouched())
+			if (Gdx.input.justTouched()){
 				game.setScreen(game.theGame);
+				Timer.instance().clear();
+			}
 		}else{
 			Timer.schedule(new Task() {
 	
@@ -54,7 +57,7 @@ public class SplashScreen implements Screen {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+		this.dispose();
 	}
 
 	@Override
@@ -71,9 +74,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
 		background.dispose();
-		
 	}
 	
 }
