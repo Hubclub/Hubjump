@@ -30,7 +30,7 @@ public class GameScreen implements Screen{
 	
 	public GameScreen(GameClass game) {
 		GameScreen.game = game;
-		mainMenu = new MainMenu(game);
+		mainMenu = new MainMenu(game,batch);
 		// Initialize the game variable
 		GG = false;
 		prefs = Gdx.app.getPreferences("GamePreferences");
@@ -38,8 +38,6 @@ public class GameScreen implements Screen{
 		
 		env= new Enviroment();
 		renderer = new EnviromentRenderer(env,true);
-
-		Gdx.input.setInputProcessor(mainMenu);
 	}
 	
 	public void restartGame(boolean showMenu){
@@ -70,7 +68,6 @@ public class GameScreen implements Screen{
 		Timer.schedule(new Task() {
 			
 			public void run() {
-				Gdx.input.setInputProcessor(mainMenu);
 				mainMenu.switchTo(1);
 				mainMenu.show();
 			}
@@ -92,11 +89,13 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		batch.begin();
-		renderer.render(batch);
+			renderer.render(batch);
+			
+			mainMenu.drawGGMessage(batch);
+		batch.end();
 		
 		if (MainMenu.isShown())
-			mainMenu.render(batch);
-		batch.end();
+			mainMenu.drawButtons();
 		
 		renderer.debugRender(env.getWorld());
 		

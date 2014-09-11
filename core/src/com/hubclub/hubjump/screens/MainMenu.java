@@ -2,117 +2,136 @@ package com.hubclub.hubjump.screens;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hubclub.hubjump.GameClass;
 
-public class MainMenu implements InputProcessor {
-	class MenuButton {
-		Texture tex;
-		Vector2 pos;
-		float width, height;
-		String name;
-		boolean pressed;
-		
-		public MenuButton (String name, String path, float x, float y, float width, float height ) {
-			tex = new Texture (Gdx.files.internal(path) );
-			pos = new Vector2(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() );
-			
-			this.width = width/100 * Gdx.graphics.getWidth();
-			this.height = height/100 * Gdx.graphics.getHeight();
-			
-			pressed = false;
-			this.name= name;
-		}
-		public void render(SpriteBatch batch){
-			batch.draw(tex, pos.x, pos.y, width, height);
-		}
-		public void render(SpriteBatch batch, BitmapFont font, String text, float x, float y){
-			font.drawMultiLine(batch, text,
-							x/100 * Gdx.graphics.getWidth() - font.getBounds(text).width/2 ,
-							y/100 * Gdx.graphics.getHeight() );
-		}
-		public boolean update(float x, float y){
-			if (x>= pos.x && x <= pos.x + width && y>=pos.y && y<=pos.y + height){
-				pressed = true;
-				return true;
-			}
-			pressed = false;
-			return false;
-		}
-		
-		// this function is meant to be overridden
-		public void action() {
-			System.out.println("MAIN MENU: NO ACTION ASSIGNED FOR BUTTON " + name);
-		}
-	}
-	private static byte NUMBER_OF_MAIN_MENU_BUTTONS = 5;
-	private static byte NUMBER_OF_RETRY_MENU_BUTTONS = 3;
+public class MainMenu {
 	private static boolean isShown,showMessage;
 	private static GameClass game;
-	BitmapFont font;
-	MenuButton[] buttons;
+	/////
+	private Stage stage; //** stage holds the Button **//
+	private BitmapFont font; 
+	private TextureAtlas buttonsAtlas; //** image of buttons **//
+	private Skin buttonSkin; //** images are used as skins of the button **//
+	private TextButton button; //** the button - the only actor in program **//
 	
-	public MainMenu(GameClass game){
+	public MainMenu(GameClass game,SpriteBatch batch){
 		MainMenu.game = game;
-		font = new BitmapFont();
 		
-		initializeMainMenuButtons();
+		stage = new Stage(new ScreenViewport(), batch);
+		
+		// load empty buttons
+		buttonsAtlas = new TextureAtlas("button/buttons.pack");
+		buttonSkin = new Skin();
+	    buttonSkin.addRegions(buttonsAtlas);
+		
+		font = new BitmapFont(Gdx.files.internal("font/LCD_Solid.fnt"));
+		font.setScale(0.6f);
+		
 		isShown = true;
 		showMessage = false;
+
+		initializeMainMenuButtons();
+		
+		Gdx.input.setInputProcessor(stage);
 	}
-	
 	public void initializeMainMenuButtons(){
-		buttons = new MenuButton[NUMBER_OF_MAIN_MENU_BUTTONS];
+		stage.clear(); // delete current buttons
+		
 		showMessage = false;
 		// initialize the menu buttons:
-		buttons[0] = new MenuButton("start", "button/start.png", 42.5f, 15, 40f, 10f) {
-			public void action (){
-				hide();
-				GameScreen.setInputHandler();
+		addButton("START", "64X32", 42.5f, 15, 40f, 10f , new InputListener(){
+			 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+	            System.out.println( "button pressed" );
+	            return true;
+	         }
+	         public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+	         	System.out.println( "button released" );
+	         	
+	        	hide();
+	        	GameScreen.setInputHandler();
+	         }
+		});
+		addButton("HUBJUMP", "128X32", 15, 85, 70 , 10 , new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
 			}
-		};
-		buttons[1] = new MenuButton("title", "button/titre.png", 15, 85, 70 , 10) {
-			public void action (){
-				System.out.println("This is the title, why would you tap it?");
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
 			}
-		};
-		buttons[2] = new MenuButton("options", "button/options.png", 62.5f, 27.5f, 20f, 10f) {
-			public void action (){
+		});
+		addButton("", "options",  62.5f, 27.5f, 20f, 10f , new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
+				
 				hide();
 				game.switchToOptionsMenu();
 			}
-		};
-		buttons[3] = new MenuButton("help", "button/help.png", 42.5f, 27.5f, 20f, 10f) {
-			public void action (){
-				
+		});
+		addButton("", "help", 42.5f, 27.5f, 20f, 10f, new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
 			}
-		};
-		buttons[4] = new MenuButton("highscores", "button/highscores.png", 15, 40, 70 , 10) {
-			public void action (){
-				
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
 			}
-		};
+		});
+		addButton("HIGHSCORES", "128X32", 15, 40, 70 , 10 , new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
+			}
+		});
 	}
 	
 	public void initializeRetryButtons(){
-		buttons = new MenuButton[NUMBER_OF_RETRY_MENU_BUTTONS];
+		stage.clear();
+		
 		showMessage = true;
 		// initialize the retry overlay buttons
-		buttons[0] = new MenuButton("gameover", "button/GG.png", 15, 65, 70, 25);
-		buttons[1] = new MenuButton("mainmenu", "button/mainmenu.png", 20, 40, 60, 10){
-			public void action(){
+	//	buttons[0] = new MenuButton("gameover", "button/GG.png", 15, 65, 70, 25);
+		addButton("main menu", "128X32", 20, 40, 60, 10 , new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
+				
 				game.theGame.restartGame(true);
 			}
-		};
-		buttons[2] = new MenuButton("retry", "button/retry.png", 20, 25, 60, 10){
-			public void action(){
+		});
+		addButton("retry", "128X32", 20, 25, 60, 10 , new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button pressed" );
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println( "button released" );
+				
+				showMessage = false;
 				game.theGame.restartGame(false);
 			}
-		};
+		});
 		
 		isShown = true;
 	}
@@ -125,13 +144,13 @@ public class MainMenu implements InputProcessor {
 		}
 	}
 	
-	public void render (SpriteBatch batch){
-		
-		for (MenuButton i : buttons){
-			i.render(batch);
-		}
+	public void drawButtons (){	
+		stage.act();
+		stage.draw();
+	}
+	public void drawGGMessage(SpriteBatch batch){
 		if (showMessage)
-			buttons[0].render(batch, font, GameScreen.GGmessage, 50, 60);
+			drawScore(batch, font, GameScreen.GGmessage, 50, 60);
 	}
 
 	public void hide (){
@@ -139,32 +158,38 @@ public class MainMenu implements InputProcessor {
 	}
 	public void show(){
 		isShown = true;
+		// each time we show it we change the input processor
+		Gdx.input.setInputProcessor(stage);
 	}
 	public static boolean isShown(){
 		if (isShown)
 			return true;
 		return false;
 	}
-	//INPUT PROCCESSING METHODS (for the main menu and only the main menu)
 	
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+	public void drawScore(SpriteBatch batch, BitmapFont font, String text, float x, float y){
+		font.drawMultiLine(batch, text,
+		x/100 * Gdx.graphics.getWidth() - font.getBounds(text).width/2 ,
+		y/100 * Gdx.graphics.getHeight() );
+		}
+	
+	public void addButton (String name,String path, float x, float y, float width, float height, InputListener inpl ) {
+		TextButtonStyle style = new TextButtonStyle(); //** Button properties **//
+		style.up = buttonSkin.getDrawable(path);
+		style.down = buttonSkin.getDrawable(path + "pressed");
+		style.font = font;
+		style.fontColor = Color.BLACK;
+		
+		button = new TextButton(name, style);
+		button.setPosition(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() ); //** Button location **//
+		button.setWidth(width/100 * Gdx.graphics.getWidth());
+		button.setHeight(height/100 * Gdx.graphics.getHeight());
+		
+		button.addListener(inpl);
+		
+		stage.addActor(button);
 	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/*
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenY = Gdx.graphics.getHeight() - screenY; // tiny correction 
@@ -178,30 +203,6 @@ public class MainMenu implements InputProcessor {
 		}
 		System.out.println("MAIN MENU: NO BUTTON TOUCHED");
 		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	}*/
 	
 }
