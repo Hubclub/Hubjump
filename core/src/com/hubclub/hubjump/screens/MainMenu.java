@@ -3,6 +3,7 @@ package com.hubclub.hubjump.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -18,16 +19,17 @@ import com.hubclub.hubjump.GameClass;
 public class MainMenu {
 	private static boolean isShown,showMessage;
 	private static GameClass game;
+	Texture title;
 	/////
 	private Stage stage; //** stage holds the Button **//
-	private BitmapFont font; 
 	private TextureAtlas buttonsAtlas; //** image of buttons **//
-	private Skin buttonSkin; //** images are used as skins of the button **//
+	protected static Skin buttonSkin; //** images are used as skins of the button **//
+	protected static BitmapFont font;
 	private TextButton button; //** the button - the only actor in program **//
 	
 	public MainMenu(GameClass game,SpriteBatch batch){
 		MainMenu.game = game;
-		
+		title = new Texture(Gdx.files.internal("button/title.png"));
 		stage = new Stage(new ScreenViewport(), batch);
 		
 		// load empty buttons
@@ -37,6 +39,7 @@ public class MainMenu {
 		
 		font = new BitmapFont(Gdx.files.internal("font/LCD_Solid.fnt"));
 		font.setScale(0.6f);
+		font.setColor(Color.BLACK);
 		
 		isShown = true;
 		showMessage = false;
@@ -62,7 +65,7 @@ public class MainMenu {
 	        	GameScreen.setInputHandler();
 	         }
 		});
-		addButton("HUBJUMP", "128X32", 15, 85, 70 , 10 , new InputListener(){
+	/*	addButton("HUBJUMP", "128X32", 15, 85, 70 , 10 , new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button pressed" );
 				return true;
@@ -70,7 +73,7 @@ public class MainMenu {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button released" );
 			}
-		});
+		});*/
 		addButton("", "options",  62.5f, 27.5f, 20f, 10f , new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button pressed" );
@@ -80,7 +83,7 @@ public class MainMenu {
 				System.out.println( "button released" );
 				
 				hide();
-				game.switchToOptionsMenu();
+				game.setScreen(new OptionsScreen(game));
 			}
 		});
 		addButton("", "help", 42.5f, 27.5f, 20f, 10f, new InputListener(){
@@ -148,9 +151,12 @@ public class MainMenu {
 		stage.act();
 		stage.draw();
 	}
-	public void drawGGMessage(SpriteBatch batch){
+	public void draw(SpriteBatch batch){
 		if (showMessage)
 			drawScore(batch, font, GameScreen.GGmessage, 50, 60);
+		if (isShown && !showMessage) // draw the title
+		batch.draw(title, 7/100f * Gdx.graphics.getWidth(), 80/100f * Gdx.graphics.getHeight(),
+					85/100f * Gdx.graphics.getWidth(), 15/100f * Gdx.graphics.getHeight());
 	}
 
 	public void hide (){
@@ -184,6 +190,7 @@ public class MainMenu {
 		button.setPosition(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() ); //** Button location **//
 		button.setWidth(width/100 * Gdx.graphics.getWidth());
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
+		
 		
 		button.addListener(inpl);
 		

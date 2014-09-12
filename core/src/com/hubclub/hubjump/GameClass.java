@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.hubclub.hubjump.screens.GameScreen;
-import com.hubclub.hubjump.screens.OptionsScreen;
 import com.hubclub.hubjump.screens.SplashScreen;
 
 // We extend the Game class because we're going 
@@ -16,17 +15,11 @@ import com.hubclub.hubjump.screens.SplashScreen;
 public class GameClass extends Game {
 	
 	public GameScreen theGame;
-	public OptionsScreen optionsScreen;
 	
 	//first time we create the game and a splashscreen(which we show first)
 	public void create() {
 		theGame = new GameScreen(this);
 		setScreen(new SplashScreen(this));
-	}
-	
-	public void switchToOptionsMenu(){
-		optionsScreen = new OptionsScreen();
-		setScreen(optionsScreen);
 	}
 	
 	public void render() {

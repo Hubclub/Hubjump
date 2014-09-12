@@ -91,7 +91,7 @@ public class GameScreen implements Screen{
 		batch.begin();
 			renderer.render(batch);
 			
-			mainMenu.drawGGMessage(batch);
+			mainMenu.draw(batch);
 		batch.end();
 		
 		if (MainMenu.isShown())
@@ -132,8 +132,7 @@ public class GameScreen implements Screen{
 	}
 	
 	public void show() {
-		
-		// Called when this screen becomes the current screen of the game
+		mainMenu.show();
 		
 	}
 	
