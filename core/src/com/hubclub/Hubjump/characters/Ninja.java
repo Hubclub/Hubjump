@@ -148,7 +148,12 @@ public class Ninja {
 	}
 
 	
-	
+	public void disableCollisions(){
+		ninjaBody.getFixtureList().get(0).setSensor(true);
+	}
+	public void enableCollisions(){
+		ninjaBody.getFixtureList().get(0).setSensor(false);
+	}
 	public void freeze (){
 		ninjaBody.setActive(false);
 	}

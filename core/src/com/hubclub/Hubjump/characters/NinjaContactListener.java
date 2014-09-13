@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Transform;
+import com.hubclub.hubjump.characters.Ninja.State;
 import com.hubclub.hubjump.worldenviroment.Enviroment;
 
 public class NinjaContactListener implements ContactListener {
@@ -22,6 +23,11 @@ public class NinjaContactListener implements ContactListener {
 	
 	@Override
 	public void beginContact(Contact contact) {
+		if (ninja.state == State.HANGING){
+			contact.setEnabled(false);
+			System.out.println("CONTACT LISTENER: WALL COLISION IGNORED");
+		}
+		
 	//	if (contact.getFixtureA().getBody().getUserData() != null)
 		if (contact.getFixtureA().getBody().getUserData().equals(ninja))
 			ninja.startContact();
@@ -36,22 +42,24 @@ public class NinjaContactListener implements ContactListener {
 		if (contact.getFixtureB().getDensity() == 4){
 			verify( contact.getFixtureB() , contact.getFixtureA() );
 		}
+		
+		
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		if (contact.getFixtureA().getBody().getUserData() != null)
+	/*	if (contact.getFixtureA().getBody().getUserData() != null)
 			if (contact.getFixtureA().getBody().getUserData().equals(ninja))
 				ninja.endContact();
 		if (contact.getFixtureB().getBody().getUserData() != null)
 			if (contact.getFixtureB().getBody().getUserData().equals(ninja))
-				ninja.endContact();
+				ninja.endContact();*/
 		
 	}
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		
+	
 	}
 	
 	//this code pulls the position and height of the window, and then checks if it should break

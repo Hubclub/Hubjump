@@ -44,7 +44,7 @@ public class WallSegment {
 			ptsHeight [1] = Ninja.NINJA_HEIGHT;
 			
 			pts [2] = generateNextJumpPoint(pts[1].cpy());
-			show();
+			//show();
 		}
 		public float peekHeight(){
 			return ptsHeight[2];
@@ -52,6 +52,7 @@ public class WallSegment {
 		public Vector2 peek(){
 			return pts[2];
 		}
+		@SuppressWarnings("unused")
 		public void show(){
 			System.out.println(pts[0] + "  " + pts[1] + " " + pts[2] + "      " + inSegment);			
 			System.out.println(ptsHeight[0] + "  " + ptsHeight[1] + " " + ptsHeight[2]);			
@@ -65,7 +66,7 @@ public class WallSegment {
 			pts[2] = new Vector2(generateNextJumpPoint(pts[2]));
 			
 			lastPointSide = !lastPointSide;
-			show();
+			//show();
 			
 			return inSegment;
 		}
@@ -143,7 +144,7 @@ public class WallSegment {
 		PolygonShape wallShape = new PolygonShape();
 		//checks if the jumpPoints fit in the wallsegment and adds the fixture.
 		do{
-			System.out.println("Created nextJumpPoint" + lastJumpPoints.peek());
+			System.out.println("WALLSEGMENT: Created nextJumpPoint" + lastJumpPoints.peek());
 			wallShape.setAsBox(WALL_WIDTH/2 , lastJumpPoints.peekHeight()/2 , new Vector2( lastJumpPoints.peek() ) , 0);
 			wallsegment.createFixture(wallShape, 0).setFriction(wallFriction);
 			
