@@ -11,6 +11,7 @@ public abstract class NinjaAnimation {
 	static TextureRegion dead = new TextureRegion ( new Texture(Gdx.files.internal("ninja/dead.png")));
 	static TextureRegion jump = new TextureRegion ( new Texture(Gdx.files.internal("ninja/jump.png")));
 	
+	
 	public static TextureRegion getTexture (State state, boolean faceDirection){
 		if (state == State.HANGING)
 			return verifyFlip(hang,faceDirection);

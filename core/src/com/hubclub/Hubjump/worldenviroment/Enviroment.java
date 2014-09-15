@@ -19,7 +19,7 @@ public class Enviroment {
 	
 	protected World world;
 	private Ninja ninja;
-	private  Queue<WallSegment> segments;
+	protected  Queue<WallSegment> segments;
 	
 	boolean fixtureDeletion;
 	Vector2 impulse;

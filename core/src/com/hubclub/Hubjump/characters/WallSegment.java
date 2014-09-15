@@ -1,15 +1,25 @@
 package com.hubclub.hubjump.characters;
 
 
+import java.util.Iterator;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.hubclub.hubjump.worldenviroment.Enviroment;
+import com.hubclub.hubjump.worldenviroment.EnviromentRenderer;
 
 public class WallSegment {
+	public static final Texture windowTex = new Texture(Gdx.files.internal("window.png"));
 	public static final float WALL_WIDTH = 1.5f;
 	public static final float WINDOW_WIDTH = 0.25f;
 	public static final float STAIR_WIDTH = 3f;
@@ -120,6 +130,10 @@ public class WallSegment {
 	private static BodyDef wallDef;
 	private static lastThreePoints lastJumpPoints;
 	private Body wallsegment;
+	private Array<Fixture> windows;
+	private Transform transform;
+	private Vector2 vec1,vec2;
+	private float height;
 	
 	public static double calculateJumpHeight(){
 		double t= (Enviroment.VP_WIDTH - 2*WALL_WIDTH - Ninja.NINJA_WIDTH) / (Ninja.JUMP_SPEED * Math.cos(Ninja.JUMP_ANGLE));
@@ -132,7 +146,10 @@ public class WallSegment {
 		wallDef.position.set(0, Enviroment.VP_HEIGHT);
 	}
 	
-	public WallSegment (){}
+	public WallSegment (){
+		vec1 = new Vector2();
+		vec2 = new Vector2();
+	}
 	
 	
 	public void generateNextSegment (World world){
@@ -155,12 +172,13 @@ public class WallSegment {
 		
 
 		wallShape.dispose();
+		getWindows();
 	}
 	
 	public void generateFirstSegment (World world){
 		lastJumpPoints= new lastThreePoints();
 		
-		//crap. do not touch
+		//spaghetti
 		initializeBodyDef();
 		wallsegment = world.createBody(wallDef);
 		wallsegment.setUserData(this);
@@ -175,8 +193,40 @@ public class WallSegment {
 		wallsegment.createFixture(wallShape, 0);
 		
 		wallShape.dispose();
-		//end of magic
+		getWindows();
 	}
+	public void getWindows(){
+		transform = wallsegment.getTransform(); // declare transform after the body is actually created
+		
+		windows = new Array<Fixture>();
+		windows.addAll(wallsegment.getFixtureList());
+		Iterator<Fixture> it = windows.iterator();
+		while (it.hasNext()){
+			Fixture fix = it.next();
+			if (fix.getDensity() != 4) // remove every fixture that is not a window
+				it.remove();
+		}
+	}
+	
+	
+	public void draw(SpriteBatch batch, float camY){
+		for (Fixture i : windows){
+			PolygonShape shape = (PolygonShape) i.getShape();
+			shape.getVertex(0, vec1); // bottom left corner of window
+			shape.getVertex(2, vec2); // top right corner of window
+			height = vec2.y - vec1.y;
+			
+			transform.mul(vec1); // change vector from body coordinates to world coordinates
+			vec1.y -= camY - Enviroment.VP_HEIGHT/2; // change the y so its relative to the camera
+			
+			batch.draw(windowTex, vec1.x * EnviromentRenderer.pixRatio,
+									vec1.y * EnviromentRenderer.pixRatio,
+									WINDOW_WIDTH * EnviromentRenderer.pixRatio,
+									height * EnviromentRenderer.pixRatio
+					);
+		}
+	}
+	
 	
 	public float getBottomBaseY (){
 		return wallsegment.getPosition().y;

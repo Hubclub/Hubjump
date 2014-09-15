@@ -125,7 +125,7 @@ public class Ninja {
 				0f, 0f,
 				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio,
 				1f, 1f, 
-				(float)Math.toDegrees( ninjaBody.getAngle() ) );
+				(float)Math.toDegrees( ninjaBody.getAngle()) );
 	}
 	
 	void startContact () {

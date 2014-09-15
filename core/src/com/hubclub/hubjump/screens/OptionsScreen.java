@@ -37,7 +37,7 @@ public class OptionsScreen implements Screen {
 		font = MainMenu.font;
 		// TODO Auto-generated constructor stub
 		prefs = Gdx.app.getPreferences("GamePreferences");
-		highscore = prefs.getString("highscore", "null") + " m";
+		highscore = prefs.getInteger("highscore", -1) + " m";
 		heightbar = new Texture(Gdx.files.internal("button/heightmeter.png"));
 		
 		stage = new Stage(new ScreenViewport(), batch);
@@ -52,7 +52,15 @@ public class OptionsScreen implements Screen {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				prefs.putInteger("highscore", 0);
 				prefs.flush();
-				highscore = prefs.getString("highscore", "null") + " m";
+				highscore = prefs.getInteger("highscore", -1) + " m";
+			}
+		});
+		addButton("debug\npasteroni", "64X32", 5, 30, 70, 15, new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				EnviromentRenderer.debug = !EnviromentRenderer.debug;
 			}
 		});
 		addButton("", "back", 67.5f, 2.5f , 30, 10, new InputListener(){

@@ -33,7 +33,7 @@ public class MainMenu {
 		stage = new Stage(new ScreenViewport(), batch);
 		
 		// load empty buttons
-		buttonsAtlas = new TextureAtlas("button/buttons.pack");
+		buttonsAtlas = new TextureAtlas("button/Buttons.pack");
 		buttonSkin = new Skin();
 	    buttonSkin.addRegions(buttonsAtlas);
 		
