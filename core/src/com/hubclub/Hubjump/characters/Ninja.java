@@ -32,7 +32,6 @@ public class Ninja {
 	boolean firstJump;
 	
 	
-	
 	public Ninja (){
 		this.state = State.IDLE;
 		faceDirection = true;
@@ -40,8 +39,7 @@ public class Ninja {
 		wallContact = false;
 		firstJump = true;
 	}
-	
-	
+
 	public void setBody(World world, float x, float y){
 		BodyDef ninjaDef= new BodyDef();
 			
@@ -74,9 +72,15 @@ public class Ninja {
 				0, 0, true);
 		this.state = State.JUMPING;
 		canDash = true;
+		wallContact = false;
+		
+		firstJump = false;
 	}
 	
 	public void jump (){
+		if (firstJump) firstjump();// the first jump is a little different...
+		else{
+		// standard jumping procedure
 		System.out.println("NINJA : JUST JUMPED");
 		this.state = State.JUMPING;
 		wallContact = false;
@@ -94,7 +98,7 @@ public class Ninja {
 		faceDirection = !faceDirection;
 	
 		canDash = true; // allow the ninja to dash next time he hits a wall.
-	}
+	}}
 	
 	public void dash(){
 		System.out.println("NINJA : JUST DASHED");
@@ -103,21 +107,6 @@ public class Ninja {
 		
 		canDash = false; // you dash once, you can't do it again( well, not on the same wall)
 	}
-	public void update (){
-		if (firstJump && GameScreen.inp.getInput(0, 0) == 1){
-			firstjump();
-			firstJump = false;
-		}else{
-			if (GameScreen.inp.getInput(0, 0) == 1 && wallContact )
-				jump();
-			
-			if (GameScreen.inp.getInput(0, 0) == 2 && wallContact && canDash )
-				dash();
-			
-			if (wallContact && state != State.IDLE )
-				if (faceDirection) ninjaBody.applyForceToCenter(ninjaBody.getMass() * HOLD_FORCE  , 0, true);
-				else ninjaBody.applyForceToCenter(-ninjaBody.getMass() * HOLD_FORCE , 0, true);
-	}}
 	
 	public void draw (SpriteBatch batch, float ratio, float y){
 		batch.draw(NinjaAnimation.getTexture(state,faceDirection),
@@ -126,6 +115,16 @@ public class Ninja {
 				NINJA_WIDTH * ratio, NINJA_HEIGHT * ratio,
 				1f, 1f, 
 				(float)Math.toDegrees( ninjaBody.getAngle()) );
+	}
+	
+	public boolean canDash(){
+		if (state == State.HANGING && canDash)
+			return true;
+		return false;
+	}
+	
+	public boolean canJump(){
+		return wallContact;
 	}
 	
 	void startContact () {
@@ -147,13 +146,6 @@ public class Ninja {
 		GameScreen.gameOver();
 	}
 
-	
-	public void disableCollisions(){
-		ninjaBody.getFixtureList().get(0).setSensor(true);
-	}
-	public void enableCollisions(){
-		ninjaBody.getFixtureList().get(0).setSensor(false);
-	}
 	public void freeze (){
 		ninjaBody.setActive(false);
 	}

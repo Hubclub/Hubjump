@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.characters.NinjaContactListener;
 import com.hubclub.hubjump.characters.WallSegment;
+import com.hubclub.hubjump.screens.GameScreen;
 
 public class Enviroment {
 	public final static float GRAVITATIONAL_ACCELERATION = -10f;
@@ -30,6 +31,7 @@ public class Enviroment {
 			ninja = new Ninja();
 			ninja.setBody(world, 2.2f, 6f);
 		world.setContactListener(new NinjaContactListener(ninja,this));
+		GameScreen.inp.setNinja(ninja);
 		
 		segments = new LinkedList<WallSegment>();
 		generateFirstSegments();
@@ -66,9 +68,7 @@ public class Enviroment {
 	    	moveQueue();
 	    }
 		
-		
-		ninja.update();
-		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+		world.step(Gdx.graphics.getDeltaTime(), 12, 4);
 		
 		if (fixtureDeletion && fixture != null){ // acts like a trigger. deletes a window once the deletion is "queued"
 			fixture.getBody().destroyFixture(fixture);

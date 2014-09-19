@@ -1,0 +1,75 @@
+
+Buttons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+128X32
+  rotate: false
+  xy: 1, 87
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+128X32pressed
+  rotate: false
+  xy: 1, 53
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+64X32
+  rotate: false
+  xy: 131, 87
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+64X32pressed
+  rotate: false
+  xy: 1, 19
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+help
+  rotate: false
+  xy: 131, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+helppressed
+  rotate: false
+  xy: 197, 87
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+options
+  rotate: false
+  xy: 67, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+optionspressed
+  rotate: false
+  xy: 165, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+back
+  rotate: false
+  xy: 1, 1
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+backpressed
+  rotate: false
+  xy: 101, 35
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1

@@ -51,7 +51,7 @@ public class GameClass extends Game {
 	}
 	
 	public void dispose() {
-		
+		theGame.dispose();
 		// TODO ~ you must implement the dispose method from superclass
 		// and dispose other variable initialized in the upper create method
 		

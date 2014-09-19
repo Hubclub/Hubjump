@@ -184,6 +184,8 @@ public class MainMenu {
 		style.up = buttonSkin.getDrawable(path);
 		style.down = buttonSkin.getDrawable(path + "pressed");
 		style.font = font;
+		style.pressedOffsetX = 1;
+		style.pressedOffsetY = -1;
 		style.fontColor = Color.BLACK;
 		
 		button = new TextButton(name, style);

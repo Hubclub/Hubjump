@@ -7,6 +7,7 @@ import com.hubclub.hubjump.characters.WallSegment;
 import com.hubclub.hubjump.screens.GameScreen;
 import com.hubclub.hubjump.screens.MainMenu;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
@@ -24,8 +25,8 @@ public class EnviromentRenderer {
 	public static OrthographicCamera camera;
 	private static int score,initCamHeight = (int) Enviroment.VP_HEIGHT/2;
 	private float brickWallOriginY = Enviroment.VP_HEIGHT/2 ,brickWallY;
-	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture.png") );
-	private static float u,v, scale = 3; // brick texture related
+	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture2.png") );
+	private static float u,v, scale = 4.5f; // brick texture related
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 		BitmapFont font,debugFont;
 		private Background background;
@@ -40,8 +41,9 @@ public class EnviromentRenderer {
 		this.world = env.world;
 		this.ninja = env.getNinja();
 		score = 0;
-			font = new BitmapFont(Gdx.files.internal("font/scorefont.fnt"));
-			font.setScale(0.9f);;
+			font = new BitmapFont(Gdx.files.internal("font/LCD_Solid.fnt"));
+			font.setColor(Color.WHITE);
+			font.setScale(0.5f);;
 			debugFont = new BitmapFont();
 		background = new Background();
 		brickTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
@@ -108,6 +110,7 @@ public class EnviromentRenderer {
 				u , v );
 
 		it = env.segments.iterator();
+		it.next().draw(batch, camera.position.y);
 		it.next().draw(batch, camera.position.y);
 		it.next().draw(batch, camera.position.y); //draw the windows...
 	}

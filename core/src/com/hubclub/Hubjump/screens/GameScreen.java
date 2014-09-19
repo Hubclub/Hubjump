@@ -100,7 +100,7 @@ public class GameScreen implements Screen{
 		renderer.debugRender(env.getWorld());
 		
 		env.update();
-		inp.updateInput();
+		//inp.updateInput();
 	}
 	
 
@@ -126,7 +126,7 @@ public class GameScreen implements Screen{
 	}
 	
 	public void dispose() {
-		
+		batch.dispose();
 		// TODO ~ dispose variables initialized in the upper create method
 		
 	}

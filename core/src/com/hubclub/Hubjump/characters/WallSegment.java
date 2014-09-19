@@ -1,8 +1,5 @@
 package com.hubclub.hubjump.characters;
 
-
-import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,6 +39,7 @@ public class WallSegment {
 		private float windowHeight;
 		boolean inSegment;
 		boolean lastPointSide; // false = left, true = right;
+		boolean adaptUpDown; // true = adapt upwards, false = adapt downwards;
 		
 		public lastThreePoints(){
 			lastPointSide = false; //hardcoded? should have been = true
@@ -52,6 +50,7 @@ public class WallSegment {
 			pts [1] = new Vector2(windowXleft, -Ninja.NINJA_HEIGHT/2);
 			ptsHeight [0] = Ninja.NINJA_HEIGHT;
 			ptsHeight [1] = Ninja.NINJA_HEIGHT;
+			adaptUpDown = false;
 			
 			pts [2] = generateNextJumpPoint(pts[1].cpy());
 			//show();
@@ -88,12 +87,22 @@ public class WallSegment {
 			else prevPt.x = windowXleft;
 			
 			//adapt y
-			prevPt.y += -ptsHeight[1]/2 + Ninja.NINJA_HEIGHT/2;
+			if (adaptUpDown)
+				prevPt.y += ptsHeight[1]/2 - Ninja.NINJA_HEIGHT/2;
+			else prevPt.y += -ptsHeight[1]/2 + Ninja.NINJA_HEIGHT/2;
 			
 			//increment y
 			prevPt.y += JUMP_HEIGHT;
-			ptsHeight[2] = Ninja.NINJA_HEIGHT + (float)Math.random()*SLIDE_RANGE;
-			prevPt.y += - ptsHeight[2] /2 + Ninja.NINJA_HEIGHT/2;
+			int rand = (int) (Math.random()*100);
+			if (rand >= 30){
+				ptsHeight[2] = Ninja.NINJA_HEIGHT + (float)Math.random()*SLIDE_RANGE;
+				prevPt.y += - ptsHeight[2] /2 + Ninja.NINJA_HEIGHT/2;
+				adaptUpDown = false;
+			}else{
+				ptsHeight[2] = Ninja.NINJA_HEIGHT + (float)Math.random()*DASH_HEIGHT;
+				prevPt.y += ptsHeight[2] /2 - Ninja.NINJA_HEIGHT/2;
+				adaptUpDown = true;
+			}
 			
 			// checks if lastpoint is in the wallsegment or outside of it
 			if (prevPt.y < 0 )
@@ -127,6 +136,7 @@ public class WallSegment {
 		}
 	}/////////////////////////////////////////////////////////////////////////
 	
+	private static Texture stairsTex = new Texture(Gdx.files.internal("stairs.png"));
 	private static BodyDef wallDef;
 	private static lastThreePoints lastJumpPoints;
 	private Body wallsegment;
@@ -190,7 +200,7 @@ public class WallSegment {
 		getWallsegment().createFixture(wallShape, 0);
 		
 		wallShape.setAsBox(STAIR_WIDTH/2 , STAIR_HEIGHT/2, new Vector2(WALL_WIDTH + STAIR_WIDTH/2, -Enviroment.VP_HEIGHT+ STAIR_WIDTH) , 0);
-		wallsegment.createFixture(wallShape, 0);
+		wallsegment.createFixture(wallShape, 3);
 		
 		wallShape.dispose();
 		getWindows();
@@ -198,32 +208,47 @@ public class WallSegment {
 	public void getWindows(){
 		transform = wallsegment.getTransform(); // declare transform after the body is actually created
 		
-		windows = new Array<Fixture>();
-		windows.addAll(wallsegment.getFixtureList());
+		windows = wallsegment.getFixtureList();
+	/*	windows.addAll(wallsegment.getFixtureList());
 		Iterator<Fixture> it = windows.iterator();
 		while (it.hasNext()){
 			Fixture fix = it.next();
 			if (fix.getDensity() != 4) // remove every fixture that is not a window
 				it.remove();
-		}
+		}*/
 	}
 	
 	
 	public void draw(SpriteBatch batch, float camY){
 		for (Fixture i : windows){
-			PolygonShape shape = (PolygonShape) i.getShape();
-			shape.getVertex(0, vec1); // bottom left corner of window
-			shape.getVertex(2, vec2); // top right corner of window
-			height = vec2.y - vec1.y;
-			
-			transform.mul(vec1); // change vector from body coordinates to world coordinates
-			vec1.y -= camY - Enviroment.VP_HEIGHT/2; // change the y so its relative to the camera
-			
-			batch.draw(windowTex, vec1.x * EnviromentRenderer.pixRatio,
-									vec1.y * EnviromentRenderer.pixRatio,
-									WINDOW_WIDTH * EnviromentRenderer.pixRatio,
-									height * EnviromentRenderer.pixRatio
-					);
+			if (i.getDensity() == 4){ // density 4 is for windows only
+				PolygonShape shape = (PolygonShape) i.getShape();
+				shape.getVertex(0, vec1); // bottom left corner of window
+				shape.getVertex(2, vec2); // top right corner of window
+				height = vec2.y - vec1.y;
+				
+				transform.mul(vec1); // change vector from body coordinates to world coordinates
+				vec1.y -= camY - Enviroment.VP_HEIGHT/2; // change the y so its relative to the camera
+				
+				batch.draw(windowTex, vec1.x * EnviromentRenderer.pixRatio,
+										vec1.y * EnviromentRenderer.pixRatio,
+										WINDOW_WIDTH * EnviromentRenderer.pixRatio,
+										height * EnviromentRenderer.pixRatio
+						);
+			}
+			if (i.getDensity() == 3){// density 3 is for the stairs
+				PolygonShape shape = (PolygonShape) i.getShape();
+				shape.getVertex(0, vec1); // bottom left corner
+				transform.mul(vec1);
+				
+				vec1.y -= camY - Enviroment.VP_HEIGHT/2; // change the y so its relative to the camera
+				
+				batch.draw(stairsTex, vec1.x * EnviromentRenderer.pixRatio,
+						vec1.y * EnviromentRenderer.pixRatio,
+						STAIR_WIDTH * EnviromentRenderer.pixRatio,
+						STAIR_HEIGHT * EnviromentRenderer.pixRatio
+						);
+			}
 		}
 	}
 	

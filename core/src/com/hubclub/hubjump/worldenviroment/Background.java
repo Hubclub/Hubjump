@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hubclub.hubjump.characters.WallSegment;
 
 public class Background {
-	private static Texture background = new Texture(Gdx.files.internal("background.jpg"));	
+	private static Texture background = new Texture(Gdx.files.internal("background.png"));	
 	
 	public Background(){
 	
