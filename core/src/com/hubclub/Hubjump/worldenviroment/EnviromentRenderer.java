@@ -3,6 +3,7 @@ package com.hubclub.hubjump.worldenviroment;
 import java.util.Iterator;
 
 import com.hubclub.hubjump.characters.Ninja;
+import com.hubclub.hubjump.characters.NinjaAnimation;
 import com.hubclub.hubjump.characters.WallSegment;
 import com.hubclub.hubjump.screens.GameScreen;
 import com.hubclub.hubjump.screens.MainMenu;
@@ -25,8 +26,11 @@ public class EnviromentRenderer {
 	public static OrthographicCamera camera;
 	private static int score,initCamHeight = (int) Enviroment.VP_HEIGHT/2;
 	private float brickWallOriginY = Enviroment.VP_HEIGHT/2 ,brickWallY;
+	
+	public static Texture StairTexture = new Texture(Gdx.files.internal("stairs.png") );
 	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture2.png") );
 	private static float u,v, scale = 4.5f; // brick texture related
+	
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 		BitmapFont font,debugFont;
 		private Background background;
@@ -119,6 +123,14 @@ public class EnviromentRenderer {
 		if (debug)
 			debugRenderer.render(world, camera.combined);
 		// this somehow interferes with batch drawing so it should always be called last
+	}
+	
+	public void dispose(){
+		brickTexture.dispose();
+		StairTexture.dispose();
+		font.dispose();
+		debugFont.dispose();
+		NinjaAnimation.dispose();
 	}
 	
 	public static int getScore(){

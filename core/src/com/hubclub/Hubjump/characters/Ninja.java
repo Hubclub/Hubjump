@@ -13,7 +13,7 @@ import com.hubclub.hubjump.screens.GameScreen;
 
 public class Ninja {
 	static public enum State{
-		IDLE, HANGING, JUMPING, DEAD
+		IDLE, HANGING, JUMPING, DEAD, DASHING
 	}
 	public static final float JUMP_SPEED = 18f;
 	public static final float DASH_SPEED = 8f;
@@ -30,13 +30,14 @@ public class Ninja {
 	boolean canDash;
 	boolean wallContact;
 	boolean firstJump;
+	float lastWallX;
 	
 	
 	public Ninja (){
 		this.state = State.IDLE;
 		faceDirection = true;
 		canDash = false;
-		wallContact = false;
+		wallContact = true;
 		firstJump = true;
 	}
 
@@ -64,6 +65,8 @@ public class Ninja {
 		ninjaBody.createFixture(ninjaFixtureDef);
 	
 		ninjaShape.dispose();
+		
+		lastWallX = ninjaBody.getPosition().x;
 	}
 	public void firstjump(){
 		ninjaBody.applyLinearImpulse(
@@ -117,6 +120,12 @@ public class Ninja {
 				(float)Math.toDegrees( ninjaBody.getAngle()) );
 	}
 	
+	public void update(){
+		if (state == State.DASHING)
+			if (ninjaBody.getLinearVelocity().y < 0)
+				state = State.HANGING;
+	}
+	
 	public boolean canDash(){
 		if (state == State.HANGING && canDash)
 			return true;
@@ -128,10 +137,15 @@ public class Ninja {
 	}
 	
 	void startContact () {
-        wallContact = true;
-        if (state != State.IDLE)
-        	this.state = State.HANGING;
-    }
+		if ((faceDirection && lastWallX < ninjaBody.getPosition().x) || //to do: fix the fix
+			(!faceDirection && lastWallX > ninjaBody.getPosition().x)
+		){
+	        lastWallX = ninjaBody.getPosition().x;
+			wallContact = true;
+	        if (state != State.IDLE)
+	        	this.state = State.HANGING;
+		}
+	}
 
 	void endContact (){
         // this gets called whenever contact switches from a window to a wall... meh

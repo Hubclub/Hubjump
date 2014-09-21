@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -55,14 +57,14 @@ public class OptionsScreen implements Screen {
 				highscore = prefs.getInteger("highscore", -1) + " m";
 			}
 		});
-		addButton("debug\npasteroni", "64X32", 5, 30, 70, 15, new InputListener(){
+		/*addButton("debug\npasteroni", "64X32", 5, 30, 70, 15, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				return true;
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				EnviromentRenderer.debug = !EnviromentRenderer.debug;
 			}
-		});
+		});*/
 		addButton("", "back", 67.5f, 2.5f , 30, 10, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				return true;
@@ -71,6 +73,9 @@ public class OptionsScreen implements Screen {
 				game.setScreen(game.theGame);
 			}
 		});
+		
+		addSlider(5, 37.5f, 70, 5);
+		addSlider(5, 25, 70, 5);
 	}
 	
 	
@@ -102,6 +107,21 @@ public class OptionsScreen implements Screen {
 		
 		stage.draw();
 		stage.act();
+	}
+	public void addSlider( float x, float y, float width, float height){
+		SliderStyle sliderStyle = new SliderStyle();
+		sliderStyle.background = buttonSkin.getDrawable("slider");
+		sliderStyle.knob = buttonSkin.getDrawable("knob");
+		sliderStyle.background.setMinHeight(height/100 * Gdx.graphics.getHeight());
+		sliderStyle.knob.setMinHeight(height/100 * Gdx.graphics.getHeight());
+		sliderStyle.knob.setMinWidth(height/100 * Gdx.graphics.getHeight());
+		
+		Slider slider = new Slider(0, 100, 1, false, sliderStyle);
+		slider.setWidth(width/100 * Gdx.graphics.getWidth());
+		slider.setHeight(height/100 * Gdx.graphics.getHeight());
+		slider.setPosition(x/100 * Gdx.graphics.getWidth(), y/100 * Gdx.graphics.getHeight());
+		
+		stage.addActor(slider);
 	}
 	
 	public void addButton (String name,String path, float x, float y, float width, float height, InputListener inpl ) {
@@ -157,6 +177,8 @@ public class OptionsScreen implements Screen {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		stage.dispose();
+		heightbar.dispose();
+		
 	}
 
 }

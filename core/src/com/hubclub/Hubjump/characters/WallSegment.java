@@ -136,7 +136,7 @@ public class WallSegment {
 		}
 	}/////////////////////////////////////////////////////////////////////////
 	
-	private static Texture stairsTex = new Texture(Gdx.files.internal("stairs.png"));
+	private static Texture stairTex = EnviromentRenderer.StairTexture;
 	private static BodyDef wallDef;
 	private static lastThreePoints lastJumpPoints;
 	private Body wallsegment;
@@ -243,7 +243,7 @@ public class WallSegment {
 				
 				vec1.y -= camY - Enviroment.VP_HEIGHT/2; // change the y so its relative to the camera
 				
-				batch.draw(stairsTex, vec1.x * EnviromentRenderer.pixRatio,
+				batch.draw(stairTex, vec1.x * EnviromentRenderer.pixRatio,
 						vec1.y * EnviromentRenderer.pixRatio,
 						STAIR_WIDTH * EnviromentRenderer.pixRatio,
 						STAIR_HEIGHT * EnviromentRenderer.pixRatio

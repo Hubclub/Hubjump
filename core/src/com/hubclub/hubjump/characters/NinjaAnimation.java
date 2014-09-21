@@ -31,4 +31,10 @@ public abstract class NinjaAnimation {
 			return tex;
 		}
 	}
+	public static void dispose(){
+		hang.getTexture().dispose();
+		idle.getTexture().dispose();
+		dead.getTexture().dispose();
+		jump.getTexture().dispose();
+	}
 }

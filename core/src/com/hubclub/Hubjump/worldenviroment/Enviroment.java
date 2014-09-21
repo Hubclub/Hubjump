@@ -95,5 +95,9 @@ public class Enviroment {
 	public Ninja getNinja(){
 		return ninja;
 	}
+	
+	public void dispose(){
+		world.dispose();
+	}
 
 }

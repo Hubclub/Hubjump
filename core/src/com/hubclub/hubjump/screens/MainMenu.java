@@ -82,7 +82,6 @@ public class MainMenu {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button released" );
 				
-				hide();
 				game.setScreen(new OptionsScreen(game));
 			}
 		});
@@ -93,6 +92,7 @@ public class MainMenu {
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button released" );
+				game.setScreen(new HelpScreen(game));
 			}
 		});
 		addButton("HIGHSCORES", "128X32", 15, 40, 70 , 10 , new InputListener(){

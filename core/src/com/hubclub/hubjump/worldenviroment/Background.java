@@ -18,4 +18,8 @@ public class Background {
 				(Enviroment.VP_WIDTH - 2*WallSegment.WALL_WIDTH)*ratio , Enviroment.VP_HEIGHT*ratio );
 		
 	}
+	
+	public void dispose(){
+		background.dispose();
+	}
 }

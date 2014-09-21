@@ -127,8 +127,8 @@ public class GameScreen implements Screen{
 	
 	public void dispose() {
 		batch.dispose();
-		// TODO ~ dispose variables initialized in the upper create method
-		
+		renderer.dispose();
+		env.dispose();	
 	}
 	
 	public void show() {
@@ -137,7 +137,7 @@ public class GameScreen implements Screen{
 	}
 	
 	public void hide() {
-		
+		//mainMenu.hide();
 		// Called when this screen is no longer the current screen of the game
 		
 	}
