@@ -22,7 +22,8 @@ public class GameScreen implements Screen{
 	public static InputHandler inp = new InputHandler(); // used for the ninja controls
 	private static boolean GG; // used to see if it's game over
 	static private Preferences prefs;
-	static public String GGmessage = "not changed queks";
+	static public String GGmessage = "not changed, queks";
+	static public boolean debug;
 	
 	EnviromentRenderer renderer;
 	Enviroment env;
@@ -32,18 +33,19 @@ public class GameScreen implements Screen{
 		GameScreen.game = game;
 		mainMenu = new MainMenu(game,batch);
 		// Initialize the game variable
+		debug = false;
 		GG = false;
 		prefs = Gdx.app.getPreferences("GamePreferences");
 		
 		
 		env= new Enviroment();
-		renderer = new EnviromentRenderer(env,true);
+		renderer = new EnviromentRenderer(env);
 	}
 	
 	public void restartGame(boolean showMenu){
 		// possible memory leak here
 		env= new Enviroment();
-		renderer = new EnviromentRenderer(env,true);
+		renderer = new EnviromentRenderer(env);
 		
 		if (showMenu){
 			mainMenu.switchTo(0); 

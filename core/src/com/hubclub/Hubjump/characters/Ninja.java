@@ -21,7 +21,8 @@ public class Ninja {
 	public static final float HOLD_FORCE = 2f;
 	public static final float NINJA_WIDTH = 1.6f;
 	public static final float NINJA_HEIGHT = 1.6f;
-	public static final float FEET_POS = 0.4f;
+	public static final float FEET_POS = 0.4f; //a y relative to the bottom of the hitbox 
+	public static final float ARMS_POS = 1f;
 
 	Texture ninjaTexture;
 	Body ninjaBody; // a reference to the object for easier manipulation...
@@ -107,6 +108,7 @@ public class Ninja {
 		System.out.println("NINJA : JUST DASHED");
 		ninjaBody.setLinearVelocity(0, 0);
 		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);
+		state = State.DASHING;
 		
 		canDash = false; // you dash once, you can't do it again( well, not on the same wall)
 	}
@@ -165,6 +167,9 @@ public class Ninja {
 	}
 	public float getFeetPos() {
 		return ninjaBody.getPosition().y + FEET_POS;
+	}
+	public float getArmsPos() {
+		return ninjaBody.getPosition().y + ARMS_POS;
 	}
 	public float getY(){
 		return ninjaBody.getPosition().y;

@@ -10,8 +10,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -75,7 +79,26 @@ public class OptionsScreen implements Screen {
 		});
 		
 		addSlider(5, 37.5f, 70, 5);
-		addSlider(5, 25, 70, 5);
+		addSlider(5, 30, 70, 5);
+		
+		addCheckBox(65, 18.5f, 10, 6, GameScreen.debug, new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.debug = !GameScreen.debug;
+			}
+		});
+		
+		
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = font;
+		labelStyle.fontColor = Color.BLACK;
+		Label debugLabel = new Label("Debug ", labelStyle);
+		debugLabel.setBounds(5/100 * Gdx.graphics.getWidth(), 18.5f/100 * Gdx.graphics.getHeight(),
+							40/100 * Gdx.graphics.getWidth(), 6/100 * Gdx.graphics.getHeight());
+		stage.addActor(debugLabel);
+		
 	}
 	
 	
@@ -123,7 +146,26 @@ public class OptionsScreen implements Screen {
 		
 		stage.addActor(slider);
 	}
-	
+	public void addCheckBox( float x, float y, float width, float height, boolean isChecked, InputListener inpl){
+		CheckBoxStyle style = new CheckBoxStyle();
+		style.checkboxOn = buttonSkin.getDrawable("checkbox");
+		style.checkboxOff = buttonSkin.getDrawable("checkboxunchecked");
+		style.font = font;
+		style.checkboxOn.setMinHeight(height/100 * Gdx.graphics.getHeight());
+		style.checkboxOff.setMinHeight(height/100 * Gdx.graphics.getHeight());
+		style.checkboxOn.setMinWidth(width/100 * Gdx.graphics.getWidth());
+		style.checkboxOff.setMinWidth(width/100 * Gdx.graphics.getWidth());
+		
+		CheckBox checkbox = new CheckBox("", style);
+		checkbox.setWidth(width/100 * Gdx.graphics.getWidth());
+		checkbox.setHeight(height/100 * Gdx.graphics.getHeight());
+		checkbox.setPosition(x/100 * Gdx.graphics.getWidth(), y/100 * Gdx.graphics.getHeight());
+		
+		checkbox.addListener(inpl);
+		
+		checkbox.setChecked(isChecked);
+		stage.addActor(checkbox);
+	}
 	public void addButton (String name,String path, float x, float y, float width, float height, InputListener inpl ) {
 		TextButtonStyle style = new TextButtonStyle(); //** Button properties **//
 		style.up = buttonSkin.getDrawable(path);

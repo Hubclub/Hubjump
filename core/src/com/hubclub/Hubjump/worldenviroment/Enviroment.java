@@ -6,6 +6,7 @@ import java.util.Queue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.hubclub.hubjump.characters.Ninja;
 import com.hubclub.hubjump.characters.NinjaContactListener;
@@ -68,15 +69,30 @@ public class Enviroment {
 	    	moveQueue();
 	    }
 		
+	    ninja.update();
 		world.step(Gdx.graphics.getDeltaTime(), 12, 4);
 		
 		if (fixtureDeletion && fixture != null){ // acts like a trigger. deletes a window once the deletion is "queued"
-			fixture.getBody().destroyFixture(fixture);
+			//createShards();
+
+			fixture.getBody().destroyFixture(fixture); // must be called after the step
 			fixture = null;
 			fixtureDeletion = false;
 			
 			ninja.crashIntoWindow(impulse);
 		}
+	}
+	@SuppressWarnings("unused")
+	private void createShards(){
+		PolygonShape shape = (PolygonShape) fixture.getShape();
+		Vector2 v = new Vector2();
+		shape.getVertex(1, v);
+		float height = v.y;
+		shape.getVertex(2, v);
+		height = v.y - height;
+		
+		
+
 	}
 	
 	public void queueFixtureDeletion(Fixture fix, Vector2 impulse){

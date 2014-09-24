@@ -80,9 +80,23 @@ backpressed
   orig: 32, 16
   offset: 0, 0
   index: -1
+checkbox
+  rotate: false
+  xy: 231, 104
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+checkboxunchecked
+  rotate: false
+  xy: 101, 17
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 knob
   rotate: false
-  xy: 231, 106
+  xy: 199, 72
   size: 16, 14
   orig: 16, 14
   offset: 0, 0

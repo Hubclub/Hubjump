@@ -35,12 +35,10 @@ public class EnviromentRenderer {
 		BitmapFont font,debugFont;
 		private Background background;
 	private Ninja ninja;
-	public static boolean debug;
 	private String scoreString;
 	Iterator<WallSegment> it;
 		
-	public EnviromentRenderer (Enviroment env,boolean debug){
-		EnviromentRenderer.debug = debug;
+	public EnviromentRenderer (Enviroment env){
 		this.env = env;
 		this.world = env.world;
 		this.ninja = env.getNinja();
@@ -97,7 +95,7 @@ public class EnviromentRenderer {
 		drawWalls(batch);
 		
 		//show character coordinates
-		if (debug){
+		if (GameScreen.debug){
 			debugFont.draw(batch, "X: " + ninja.getX(), 0, 40 );
 			debugFont.draw(batch, "Y: " + ninja.getY(), 0, 20 );
 		}
@@ -120,7 +118,7 @@ public class EnviromentRenderer {
 	}
 	
 	public void debugRender(World world){
-		if (debug)
+		if (GameScreen.debug)
 			debugRenderer.render(world, camera.combined);
 		// this somehow interferes with batch drawing so it should always be called last
 	}

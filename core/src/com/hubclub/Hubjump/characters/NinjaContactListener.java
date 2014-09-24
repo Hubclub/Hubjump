@@ -79,7 +79,8 @@ public class NinjaContactListener implements ContactListener {
 			
 		// now we have vec (the position of the window) and the height of the window
 			
-		if ( inBetween( vec.y-height , this.ninja.getFeetPos() , vec.y) ){
+		if ( inBetween( vec.y-height , this.ninja.getFeetPos() , vec.y) ||
+			 inBetween( vec.y-height , this.ninja.getArmsPos() , vec.y)	){
 			env.queueFixtureDeletion( window, ninja.getBody().getLinearVelocity() );
 			env.stopContactListener();
 			Gdx.input.setInputProcessor(null);
