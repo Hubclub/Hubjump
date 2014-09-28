@@ -38,30 +38,37 @@ slider
   orig: 64, 32
   offset: 0, 0
   index: -1
-help
+GGbackground
   rotate: false
   xy: 131, 54
-  size: 32, 32
-  orig: 32, 32
+  size: 64, 32
+  orig: 64, 32
   offset: 0, 0
   index: -1
-helppressed
+help
   rotate: false
   xy: 197, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-options
+helppressed
   rotate: false
   xy: 67, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+options
+  rotate: false
+  xy: 197, 54
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 optionspressed
   rotate: false
-  xy: 165, 54
+  xy: 101, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -89,14 +96,14 @@ checkbox
   index: -1
 checkboxunchecked
   rotate: false
-  xy: 101, 17
+  xy: 199, 36
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 199, 72
+  xy: 231, 88
   size: 16, 14
   orig: 16, 14
   offset: 0, 0

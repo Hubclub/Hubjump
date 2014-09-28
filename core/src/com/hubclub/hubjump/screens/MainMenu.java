@@ -1,6 +1,5 @@
 package com.hubclub.hubjump.screens;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,14 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hubclub.hubjump.GameClass;
 
 public class MainMenu {
-	private static boolean isShown,showMessage;
+	private static boolean isShown;
 	private static GameClass game;
 	Texture title;
 	/////
@@ -42,7 +44,6 @@ public class MainMenu {
 		font.setColor(Color.BLACK);
 		
 		isShown = true;
-		showMessage = false;
 
 		initializeMainMenuButtons();
 		
@@ -51,7 +52,6 @@ public class MainMenu {
 	public void initializeMainMenuButtons(){
 		stage.clear(); // delete current buttons
 		
-		showMessage = false;
 		// initialize the menu buttons:
 		addButton("START", "64X32", 42.5f, 15, 40f, 10f , new InputListener(){
 			 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -104,12 +104,17 @@ public class MainMenu {
 				System.out.println( "button released" );
 			}
 		});
+		
+		Image title = new Image(new Texture(Gdx.files.internal("button/title.png")));
+		title.setWidth(50/100f * Gdx.graphics.getHeight());
+		title.setHeight(15/100f * Gdx.graphics.getHeight());
+		title.setCenterPosition(50/100f * Gdx.graphics.getWidth(), 90/100f * Gdx.graphics.getHeight());
+		stage.addActor(title);
 	}
 	
 	public void initializeRetryButtons(){
 		stage.clear();
 		
-		showMessage = true;
 		// initialize the retry overlay buttons
 	//	buttons[0] = new MenuButton("gameover", "button/GG.png", 15, 65, 70, 25);
 		addButton("main menu", "128X32", 20, 40, 60, 10 , new InputListener(){
@@ -131,10 +136,28 @@ public class MainMenu {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println( "button released" );
 				
-				showMessage = false;
 				game.theGame.restartGame(false);
 			}
 		});
+		
+		LabelStyle messageStyle = new LabelStyle();
+		messageStyle.font = font;
+		messageStyle.fontColor = Color.ORANGE;
+		Label message = new Label(GameScreen.GGmessage, messageStyle);
+		message.setCenterPosition(50/100f * Gdx.graphics.getWidth(), 60/100f * Gdx.graphics.getHeight());
+		stage.addActor(message);
+		
+		Image GGbck = new Image(buttonSkin.getDrawable("GGbackground"));
+		GGbck.setBounds(10/100f * Gdx.graphics.getWidth(), 70/100f * Gdx.graphics.getHeight(),
+					80/100f * Gdx.graphics.getWidth(), 20/100f * Gdx.graphics.getHeight());
+		stage.addActor(GGbck);
+		
+		LabelStyle ggStyle = new LabelStyle();
+		ggStyle.font = font;
+		ggStyle.fontColor = Color.BLACK;
+		Label gg = new Label("GAME OVER", ggStyle);
+		gg.setCenterPosition(50/100f * Gdx.graphics.getWidth(), 80/100f * Gdx.graphics.getHeight());
+		stage.addActor(gg);
 		
 		isShown = true;
 	}
@@ -151,14 +174,14 @@ public class MainMenu {
 		stage.act();
 		stage.draw();
 	}
-	public void draw(SpriteBatch batch){
+/*	public void draw(SpriteBatch batch){
 		if (showMessage)
 			drawScore(batch, font, GameScreen.GGmessage, 50, 60);
 		if (isShown && !showMessage) // draw the title
 		batch.draw(title, 7/100f * Gdx.graphics.getWidth(), 80/100f * Gdx.graphics.getHeight(),
 					85/100f * Gdx.graphics.getWidth(), 15/100f * Gdx.graphics.getHeight());
 	}
-
+*/
 	public void hide (){
 		isShown = false;
 	}
@@ -192,10 +215,14 @@ public class MainMenu {
 		button.setPosition(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() ); //** Button location **//
 		button.setWidth(width/100 * Gdx.graphics.getWidth());
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
-		
-		
+		button.addListener(new InputListener(){	
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.buttonSound.play();
+				return true;
+			}
+		});
 		button.addListener(inpl);
-		
+
 		stage.addActor(button);
 	}
 	/*

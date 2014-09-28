@@ -82,8 +82,10 @@ public class EnviromentRenderer {
 		if (ninja.getY() < camera.position.y - Enviroment.VP_HEIGHT/2 - Ninja.NINJA_HEIGHT){
 			ninja.freeze();
 			
-			if (!GameScreen.isGameOver() )
+			if (!GameScreen.isGameOver() ){
+				GameScreen.scream.play();
 				GameScreen.gameOver();
+			}
 		}
 	}
 	

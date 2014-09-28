@@ -49,7 +49,6 @@ public class OptionsScreen implements Screen {
 		stage = new Stage(new ScreenViewport(), batch);
 		stage.clear();
 		Gdx.input.setInputProcessor(stage);
-		         
 		
 		addButton("reset score", "64X32", 5, 60, 70, 15, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -95,8 +94,8 @@ public class OptionsScreen implements Screen {
 		labelStyle.font = font;
 		labelStyle.fontColor = Color.BLACK;
 		Label debugLabel = new Label("Debug ", labelStyle);
-		debugLabel.setBounds(5/100 * Gdx.graphics.getWidth(), 18.5f/100 * Gdx.graphics.getHeight(),
-							40/100 * Gdx.graphics.getWidth(), 6/100 * Gdx.graphics.getHeight());
+		debugLabel.setBounds(5/100f * Gdx.graphics.getWidth(), 18.5f/100f * Gdx.graphics.getHeight(),
+							40/100f * Gdx.graphics.getWidth(), 6/100f * Gdx.graphics.getHeight());
 		stage.addActor(debugLabel);
 		
 	}
@@ -179,7 +178,12 @@ public class OptionsScreen implements Screen {
 		button.setPosition(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() ); //** Button location **//
 		button.setWidth(width/100 * Gdx.graphics.getWidth());
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
-		
+		button.addListener(new InputListener(){	
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.buttonSound.play();
+				return true;
+			}
+		});
 		button.addListener(inpl);
 		
 		stage.addActor(button);

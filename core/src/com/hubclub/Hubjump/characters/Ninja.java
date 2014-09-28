@@ -82,6 +82,7 @@ public class Ninja {
 	}
 	
 	public void jump (){
+		GameScreen.jumpSound.play();
 		if (firstJump) firstjump();// the first jump is a little different...
 		else{
 		// standard jumping procedure
@@ -105,6 +106,9 @@ public class Ninja {
 	}}
 	
 	public void dash(){
+		//to do: find dash sound
+		GameScreen.jumpSound.play();
+		
 		System.out.println("NINJA : JUST DASHED");
 		ninjaBody.setLinearVelocity(0, 0);
 		ninjaBody.applyLinearImpulse(0, ninjaBody.getMass() * DASH_SPEED , 0, 0, true);

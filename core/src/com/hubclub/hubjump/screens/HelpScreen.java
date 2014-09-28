@@ -77,7 +77,12 @@ public class HelpScreen implements Screen {
 		button.setPosition(x/100 * Gdx.graphics.getWidth() , y/100 * Gdx.graphics.getHeight() ); //** Button location **//
 		button.setWidth(width/100 * Gdx.graphics.getWidth());
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
-		
+		button.addListener(new InputListener(){	
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.buttonSound.play();
+				return true;
+			}
+		});
 		button.addListener(inpl);
 		
 		stage.addActor(button);
