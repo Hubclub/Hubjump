@@ -28,7 +28,7 @@ public class EnviromentRenderer {
 	private float brickWallOriginY = Enviroment.VP_HEIGHT/2 ,brickWallY;
 	
 	public static Texture StairTexture = new Texture(Gdx.files.internal("stairs.png") );
-	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture2.png") );
+	public static Texture brickTexture = new Texture(Gdx.files.internal("BrickTexture.png") );
 	private static float u,v, scale = 4.5f; // brick texture related
 	
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();

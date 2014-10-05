@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hubclub.hubjump.GameClass;
 import com.hubclub.hubjump.worldenviroment.EnviromentRenderer;
@@ -31,10 +35,13 @@ public class OptionsScreen implements Screen {
 	private Stage stage; //** stage holds the Button **//
 	private BitmapFont font; 
 	private Skin buttonSkin; //** images are used as skins of the button **//
+	private static Skin icons;
 	private TextButton button; //** the button - the only actor in program **//
 	private Preferences prefs;
 	private String highscore;
 	Texture heightbar;
+	
+	
 	
 	public OptionsScreen(final GameClass game) {
 		this.game = game;
@@ -45,6 +52,10 @@ public class OptionsScreen implements Screen {
 		prefs = Gdx.app.getPreferences("GamePreferences");
 		highscore = prefs.getInteger("highscore", -1) + " m";
 		heightbar = new Texture(Gdx.files.internal("button/heightmeter.png"));
+		
+		TextureAtlas iconsAtlas = new TextureAtlas("button/icons.pack");
+		icons = new Skin();
+		icons.addRegions(iconsAtlas);
 		
 		stage = new Stage(new ScreenViewport(), batch);
 		stage.clear();
@@ -60,6 +71,12 @@ public class OptionsScreen implements Screen {
 				highscore = prefs.getInteger("highscore", -1) + " m";
 			}
 		});
+		
+		Image black = new Image(icons.getDrawable("black"));
+		black .setBounds(80/100f * Gdx.graphics.getWidth(), 18f/100f * Gdx.graphics.getHeight(),
+					10/100f * Gdx.graphics.getWidth(), 25/100f * Gdx.graphics.getHeight());
+		stage.addActor(black );
+		
 		/*addButton("debug\npasteroni", "64X32", 5, 30, 70, 15, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				return true;
@@ -77,8 +94,31 @@ public class OptionsScreen implements Screen {
 			}
 		});
 		
-		addSlider(5, 37.5f, 70, 5);
-		addSlider(5, 30, 70, 5);
+		addSlider(5, 37.5f, 70, 5, GameScreen.sound, new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				GameScreen.sound = (int)((Slider) actor).getValue();
+				//System.out.println(((Slider) actor).getValue());
+			}
+		});
+			Image soundIcon = new Image(icons.getDrawable("sound"));
+			soundIcon.setBounds(80/100f * Gdx.graphics.getWidth(), 37.5f/100f * Gdx.graphics.getHeight(),
+					10/100f * Gdx.graphics.getWidth(), 5/100f * Gdx.graphics.getHeight());
+			stage.addActor(soundIcon);
+			
+		addSlider(5, 30, 70, 5, GameScreen.ambient, new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				GameScreen.ambient = (int)((Slider) actor).getValue();
+				//System.out.println(((Slider) actor).getValue());
+			}
+		});
+			Image ambientIcon = new Image(icons.getDrawable("ambient"));
+			ambientIcon.setBounds(80/100f * Gdx.graphics.getWidth(), 30/100f * Gdx.graphics.getHeight(),
+					10/100f * Gdx.graphics.getWidth(), 5/100f * Gdx.graphics.getHeight());
+			stage.addActor(ambientIcon);
 		
 		addCheckBox(65, 18.5f, 10, 6, GameScreen.debug, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -88,11 +128,14 @@ public class OptionsScreen implements Screen {
 				GameScreen.debug = !GameScreen.debug;
 			}
 		});
-		
+			Image debugIcon = new Image(icons.getDrawable("debug"));
+			debugIcon.setBounds(80/100f * Gdx.graphics.getWidth(), 18.5f/100f * Gdx.graphics.getHeight(),
+					10/100f * Gdx.graphics.getWidth(), 5/100f * Gdx.graphics.getHeight());
+			stage.addActor(debugIcon);
 		
 		LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = font;
-		labelStyle.fontColor = Color.BLACK;
+		labelStyle.fontColor = Color.GREEN;
 		Label debugLabel = new Label("Debug ", labelStyle);
 		debugLabel.setBounds(5/100f * Gdx.graphics.getWidth(), 18.5f/100f * Gdx.graphics.getHeight(),
 							40/100f * Gdx.graphics.getWidth(), 6/100f * Gdx.graphics.getHeight());
@@ -130,7 +173,7 @@ public class OptionsScreen implements Screen {
 		stage.draw();
 		stage.act();
 	}
-	public void addSlider( float x, float y, float width, float height){
+	public void addSlider( float x, float y, float width, float height, int value, ChangeListener inp){
 		SliderStyle sliderStyle = new SliderStyle();
 		sliderStyle.background = buttonSkin.getDrawable("slider");
 		sliderStyle.knob = buttonSkin.getDrawable("knob");
@@ -142,6 +185,14 @@ public class OptionsScreen implements Screen {
 		slider.setWidth(width/100 * Gdx.graphics.getWidth());
 		slider.setHeight(height/100 * Gdx.graphics.getHeight());
 		slider.setPosition(x/100 * Gdx.graphics.getWidth(), y/100 * Gdx.graphics.getHeight());
+		slider.setValue(value);
+		slider.addListener(new InputListener(){	
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.buttonSound.play(GameScreen.sound/100f);
+				return true;
+			}
+		});
+		slider.addListener(inp);
 		
 		stage.addActor(slider);
 	}
@@ -159,7 +210,12 @@ public class OptionsScreen implements Screen {
 		checkbox.setWidth(width/100 * Gdx.graphics.getWidth());
 		checkbox.setHeight(height/100 * Gdx.graphics.getHeight());
 		checkbox.setPosition(x/100 * Gdx.graphics.getWidth(), y/100 * Gdx.graphics.getHeight());
-		
+		checkbox.addListener(new InputListener(){	
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				GameScreen.buttonSound.play(GameScreen.sound/100f);
+				return true;
+			}
+		});
 		checkbox.addListener(inpl);
 		
 		checkbox.setChecked(isChecked);
@@ -180,7 +236,7 @@ public class OptionsScreen implements Screen {
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
 		button.addListener(new InputListener(){	
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				GameScreen.buttonSound.play();
+				GameScreen.buttonSound.play(GameScreen.sound/100f);
 				return true;
 			}
 		});
@@ -224,7 +280,7 @@ public class OptionsScreen implements Screen {
 		// TODO Auto-generated method stub
 		stage.dispose();
 		heightbar.dispose();
-		
+		icons.dispose();
 	}
 
 }

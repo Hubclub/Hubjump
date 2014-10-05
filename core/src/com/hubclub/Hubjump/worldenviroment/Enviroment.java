@@ -75,7 +75,7 @@ public class Enviroment {
 		if (fixtureDeletion && fixture != null){ // acts like a trigger. deletes a window once the deletion is "queued"
 			//createShards();
 			
-			GameScreen.glassBreak.play();
+			GameScreen.glassBreak.play(GameScreen.sound/100f);
 			fixture.getBody().destroyFixture(fixture); // must be called after the step
 			fixture = null;
 			fixtureDeletion = false;

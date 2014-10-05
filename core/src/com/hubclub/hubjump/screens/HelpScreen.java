@@ -5,11 +5,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hubclub.hubjump.GameClass;
@@ -23,6 +27,7 @@ public class HelpScreen implements Screen {
 	private Skin buttonSkin;
 	private Stage stage;
 	private TextButton button;
+	private Skin icons;
 	
 	public HelpScreen(final GameClass game) {
 		this.game = game;
@@ -35,6 +40,15 @@ public class HelpScreen implements Screen {
 		stage.clear();
 		Gdx.input.setInputProcessor(stage);
 		
+		TextureAtlas iconsAtlas = new TextureAtlas("button/icons.pack");
+		icons = new Skin();
+		icons.addRegions(iconsAtlas);
+		
+		Image black = new Image(icons.getDrawable("black"));
+		black .setBounds(2.5f/100f * Gdx.graphics.getWidth(), 17f/100f * Gdx.graphics.getHeight(),
+					95/100f * Gdx.graphics.getWidth(), 65/100f * Gdx.graphics.getHeight());
+		stage.addActor(black );
+		
 		addButton("", "back", 67.5f, 2.5f , 30, 10, new InputListener(){
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				return true;
@@ -43,6 +57,24 @@ public class HelpScreen implements Screen {
 				game.setScreen(game.theGame);
 			}
 		});
+		
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = font;
+		labelStyle.fontColor = Color.WHITE;
+		Label instructions = new Label("Jump by tapping" + "\n"
+				+ "the screen and" + "\n"
+				+ "swipe to dash" + "\n"
+				+ "up a wall," + "\n"
+				+ "but only once " + "\n"
+				+ "per wall!\n" + "\n"
+				+ "Go as high" + "\n"
+				+ "as you can" + "\n"
+				+ "but be careful" + "\n"
+				+ "not to land" + "\n"
+				+ "on a window!", labelStyle);
+		instructions.setBounds(5/100f * Gdx.graphics.getWidth(), 18.5f/100f * Gdx.graphics.getHeight(),
+							90/100f * Gdx.graphics.getWidth(), 63/100f * Gdx.graphics.getHeight());
+		stage.addActor(instructions);
 	}
 
 	@Override
@@ -79,7 +111,7 @@ public class HelpScreen implements Screen {
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
 		button.addListener(new InputListener(){	
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				GameScreen.buttonSound.play();
+				GameScreen.buttonSound.play(GameScreen.sound/100f);
 				return true;
 			}
 		});

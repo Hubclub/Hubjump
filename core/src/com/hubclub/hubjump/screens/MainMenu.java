@@ -145,6 +145,7 @@ public class MainMenu {
 		messageStyle.fontColor = Color.ORANGE;
 		Label message = new Label(GameScreen.GGmessage, messageStyle);
 		message.setCenterPosition(50/100f * Gdx.graphics.getWidth(), 60/100f * Gdx.graphics.getHeight());
+		message.setWidth(60/100f * Gdx.graphics.getWidth());
 		stage.addActor(message);
 		
 		Image GGbck = new Image(buttonSkin.getDrawable("GGbackground"));
@@ -217,7 +218,7 @@ public class MainMenu {
 		button.setHeight(height/100 * Gdx.graphics.getHeight());
 		button.addListener(new InputListener(){	
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				GameScreen.buttonSound.play();
+				GameScreen.buttonSound.play(GameScreen.sound/100f);
 				return true;
 			}
 		});

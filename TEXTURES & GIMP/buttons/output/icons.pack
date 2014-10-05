@@ -1,0 +1,33 @@
+
+icons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ambient
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+debug
+  rotate: false
+  xy: 19, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+sound
+  rotate: false
+  xy: 37, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+black
+  rotate: false
+  xy: 55, 9
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1

@@ -30,7 +30,11 @@ public class GameScreen implements Screen{
 	public static Sound buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/171521__fins__button.wav"));
 	public static Sound glassBreak = Gdx.audio.newSound(Gdx.files.internal("sound/173620__gevaroy__029.wav"));
 	public static Sound jumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/146726__fins__jumping.wav"));
+	public static Sound landing = Gdx.audio.newSound(Gdx.files.internal("sound/86005__nextmaking__landing-on-the-ground.wav"));
 	public static Sound scream = Gdx.audio.newSound(Gdx.files.internal("sound/WilhelmScream.wav"));
+	// sound level:
+	public static int sound;
+	public static int ambient;
 	
 	EnviromentRenderer renderer;
 	Enviroment env;
@@ -43,6 +47,8 @@ public class GameScreen implements Screen{
 		debug = false;
 		GG = false;
 		prefs = Gdx.app.getPreferences("GamePreferences");
+			sound = prefs.getInteger("sound", 60);
+			ambient = prefs.getInteger("ambient", 20);
 		
 		env= new Enviroment();
 		renderer = new EnviromentRenderer(env);
@@ -140,6 +146,7 @@ public class GameScreen implements Screen{
 		glassBreak.dispose();
 		jumpSound.dispose();
 		scream.dispose();
+		landing.dispose();
 	}
 	
 	public void show() {

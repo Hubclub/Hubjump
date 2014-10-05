@@ -31,6 +31,7 @@ public class Ninja {
 	boolean canDash;
 	boolean wallContact;
 	boolean firstJump;
+	public boolean playLandingSound;
 	float lastWallX;
 	
 	
@@ -40,6 +41,7 @@ public class Ninja {
 		canDash = false;
 		wallContact = true;
 		firstJump = true;
+		playLandingSound = false;
 	}
 
 	public void setBody(World world, float x, float y){
@@ -82,7 +84,8 @@ public class Ninja {
 	}
 	
 	public void jump (){
-		GameScreen.jumpSound.play();
+		GameScreen.jumpSound.play(GameScreen.sound/100f);
+		playLandingSound = true;
 		if (firstJump) firstjump();// the first jump is a little different...
 		else{
 		// standard jumping procedure
@@ -107,7 +110,7 @@ public class Ninja {
 	
 	public void dash(){
 		//to do: find dash sound
-		GameScreen.jumpSound.play();
+		GameScreen.jumpSound.play(GameScreen.sound/100f);
 		
 		System.out.println("NINJA : JUST DASHED");
 		ninjaBody.setLinearVelocity(0, 0);
@@ -151,6 +154,10 @@ public class Ninja {
 	        if (state != State.IDLE)
 	        	this.state = State.HANGING;
 		}
+		
+		if (playLandingSound)
+			GameScreen.landing.play(GameScreen.sound/100f);
+		playLandingSound = false;
 	}
 
 	void endContact (){
@@ -163,6 +170,7 @@ public class Ninja {
 		this.state = State.DEAD;
 		wallContact = false;
 		
+
 		GameScreen.gameOver();
 	}
 
