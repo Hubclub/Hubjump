@@ -154,5 +154,6 @@ public class HelpScreen implements Screen {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		stage.dispose();
+		icons.dispose();
 	}
 }

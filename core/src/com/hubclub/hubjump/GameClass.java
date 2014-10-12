@@ -15,11 +15,16 @@ import com.hubclub.hubjump.screens.SplashScreen;
 public class GameClass extends Game {
 	
 	public GameScreen theGame;
+	IActivityRequestHandler handler;
 	
+	public GameClass (IActivityRequestHandler handler){
+		this.handler=handler;
+	}
 	//first time we create the game and a splashscreen(which we show first)
 	public void create() {
 		theGame = new GameScreen(this);
 		setScreen(new SplashScreen(this));
+		
 	}
 	
 	public void render() {

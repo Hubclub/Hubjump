@@ -15,7 +15,7 @@ public class Background {
 	public void draw(SpriteBatch batch, float ratio){
 		batch.draw(background,
 				WallSegment.WALL_WIDTH*ratio ,0 ,
-				(Enviroment.VP_WIDTH - 2*WallSegment.WALL_WIDTH)*ratio , Enviroment.VP_HEIGHT*ratio );
+				Gdx.graphics.getWidth() - 2*WallSegment.WALL_WIDTH*ratio , Enviroment.VP_HEIGHT*ratio );
 		
 	}
 	
